@@ -1,3 +1,5 @@
+import { DefaultTheme } from "styled-components";
+
 const colors = {
   greanScale: {
     main: "#AFDCAB",
@@ -17,7 +19,8 @@ const colors = {
   black: "#000000",
 };
 
-export const theme = {
+export type ColorsTypes = typeof colors;
+
+export const theme: DefaultTheme = {
   colors,
 };
-export type Theme = typeof theme;
