@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import Header from "../components/header";
-import Main from "../components/main";
+import Slide from "./Slide";
+import UserInfo from "./UserInfo";
 
-const MainPage = () => {
+const Main = () => {
   return (
     <Wrapper>
-      <Header />
-      <Main />
+      <UserInfo />
     </Wrapper>
   );
 };
@@ -18,4 +17,4 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-export default MainPage;
+export default Main;
