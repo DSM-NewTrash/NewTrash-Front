@@ -3,7 +3,7 @@ import { DefaultTheme } from "styled-components";
 const colors = {
   greanScale: {
     main: "#AFDCAB",
-    grean: "69D2A6",
+    grean: "#69D2A6",
     Dark_Grean: "#ACC7B4",
     Light_Grean: "#6BC662",
   },
