@@ -1,14 +1,22 @@
 import styled from "styled-components";
 import Vector from "../../assets/Vector.svg";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <Wrapper>
-      <LogoBox />
+      <Link to="/main">
+        <LogoBox />
+      </Link>
       <MenuContainer>
         <p>환경 신고</p>
         <p>문제집</p>
-        <p>문제 출제하기</p>
+        <Link
+          to="/first-create"
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <p>문제 출제하기</p>
+        </Link>
       </MenuContainer>
       <SearchBox>
         <SearchInput placeholder="문제집을 검색해주세요" type="text" />
@@ -26,7 +34,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 60px;
   padding: 15px;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
   background: #fcfcfc;
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
 `;
