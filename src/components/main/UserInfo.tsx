@@ -58,9 +58,10 @@ const UserTextContainer = styled.div`
 
 const UserName = styled.p`
   font-size: 22px;
-  font-weight: 400;
+  font-weight: 510;
   background-color: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.black};
+  margin-bottom: 18px;
 `;
 
 const UserDescriptionWrapper = styled.div`
@@ -78,7 +79,7 @@ const UserDescription = styled.p`
 
 const UserDescriptionGreen = styled.p`
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 510;
   background-color: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.greanScale.grean};
 `;

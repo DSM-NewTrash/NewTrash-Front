@@ -5,24 +5,25 @@ import Slider from "react-slick";
 
 const Slide = () => {
   const settings = {
-    dots: false,
-    arrows: false,
     infinite: true,
+    arrows: false,
+    speed: 2000,
+    autoplay: true,
+    autoplaySpeed: 3500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 2000,
+    draggable: false,
     cssEase: "linear",
+    variableWidth: true,
   };
 
   return (
-    <div>
+    <Wrapper>
       <StyledSlider {...settings}>
         <img src={banner1} alt="1" />
         <img src={banner2} alt="2" />
       </StyledSlider>
-    </div>
+    </Wrapper>
   );
 };
 
@@ -33,20 +34,19 @@ const Wrapper = styled.div`
 `;
 
 const StyledSlider = styled(Slider)`
-> img{
-    width: 800px;
+  .slick-list{
+    width: 1920px;
     height: 300px;
-}
-
-  > div {
-    margin: 0 60px;
+    margin-right: -408px;
+    margin-bottom: 30px;
   }
 
-  .slick-list{
+  .slick-track{
     display: flex;
     justify-content: center;
-    width: 1200px;
+    width: 1000px;
     height: 300px;
+
   }
 `;
 

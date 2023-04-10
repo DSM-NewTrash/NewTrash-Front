@@ -5,6 +5,7 @@ import UserInfo from "./UserInfo";
 const Main = () => {
   return (
     <Wrapper>
+      <Slide />
       <UserInfo />
     </Wrapper>
   );
