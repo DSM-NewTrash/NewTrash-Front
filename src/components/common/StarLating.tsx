@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaStar } from "react-icons/fa";
+import star from "../../assets/star.svg";
 
 interface Props {
   Input: boolean;
@@ -15,6 +16,12 @@ const StarLating = ({ Input, star_lating }: Props) => {
     false,
     false,
   ]);
+
+  let arr1 = [];
+
+  for (let i = 1; i < star_lating + 1; i++) {
+    arr1.push(i);
+  }
 
   const handleStarClick = (index: number) => {
     let clickStates = [...starState];
@@ -34,33 +41,36 @@ const StarLating = ({ Input, star_lating }: Props) => {
 
   return (
     <Stars inputSize={Input}>
-      {Input
-        ? [1, 2, 3, 4, 5].map((el, idx) => {
-            return (
-              <FaStar
-                key={idx}
-                size="50"
-                onClick={() => handleStarClick(el)}
-                className={starState[star_lating] ? "yellowStar" : ""}
-              />
-            );
-          })
-        : [1, 2, 3, 4, 5].map((idx) => {
-            console.log(star_lating);
-            return (
-              <FaStar
-                key={idx}
-                size="50"
-                className={starState[star_lating] ? "yellowStar" : ""}
-              />
-            );
-          })}
+      {Input ? (
+        [1, 2, 3, 4, 5].map((el, idx) => {
+          return (
+            <FaStar
+              key={idx}
+              size="50"
+              onClick={() => handleStarClick(el)}
+              className={starState[star_lating] ? "yellowStar" : ""}
+            />
+          );
+        })
+      ) : (
+        <>
+          {arr1.map(() => (
+            <img src={star} alt="*" className="star" />
+          ))}
+        </>
+      )}
     </Stars>
   );
 };
 
 const Stars = styled.div<{ inputSize: boolean }>`
   display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+
+  .star {
+    margin-right: 5px;
+  }
 
   & svg {
     width: ${({ inputSize }) => (inputSize ? "58px" : "22px")};

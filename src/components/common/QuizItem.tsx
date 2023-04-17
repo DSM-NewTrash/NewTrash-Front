@@ -1,9 +1,14 @@
-import { useState } from "react";
 import styled from "styled-components";
 import StarLating from "./StarLating";
 
 interface Props {
+  quiz_img: string;
+  quiz_title: string;
+  quiz_maker: string;
+  quiz_length: number;
+  description: string;
   star_lating: number;
+  category: string[];
 }
 
 const QuizItem = () => {
@@ -14,6 +19,7 @@ const QuizItem = () => {
         <QuizInfoWrapper>
           <p className="title">00문제집</p>
           <StarLating Input={false} star_lating={3} />
+          <p className="starLating">(3)</p>
         </QuizInfoWrapper>
       </ContentWrapper>
     </Wrapper>
@@ -46,10 +52,18 @@ const ContentWrapper = styled.div`
 const QuizInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+
   .title {
     font-weight: 400;
     font-size: 20px;
     color: ${({ theme }) => theme.colors.black};
+  }
+
+  .starLating {
+    font-weight: 400;
+    font-size: 16px;
+    color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
   }
 `;
 

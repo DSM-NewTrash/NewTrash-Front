@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import QuizItem from "../common/QuizItem";
 
 const NewList = () => {
   return (
