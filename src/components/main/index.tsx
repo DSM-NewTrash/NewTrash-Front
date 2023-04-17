@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import NewList from "./NewList";
+import PopularList from "./PopularList";
 import Slide from "./Slide";
 import UserInfo from "./UserInfo";
 
@@ -7,6 +9,8 @@ const Main = () => {
     <Wrapper>
       <Slide />
       <UserInfo />
+      <PopularList />
+      <NewList />
     </Wrapper>
   );
 };
