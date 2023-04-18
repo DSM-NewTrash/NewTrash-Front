@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import QuizItem from "../common/QuizItem";
 
 const NewList = () => {
   return (
@@ -7,7 +8,9 @@ const NewList = () => {
         <p className="title">NEW 문제집</p>
         <p className="see">최신 문제집 보러가기 &#62;</p>
       </TitleContainer>
-      <ItemListWrapper></ItemListWrapper>
+      <ItemListWrapper>
+        <QuizItem />
+      </ItemListWrapper>
     </Wrapper>
   );
 };
