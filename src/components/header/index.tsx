@@ -28,7 +28,7 @@ const Header = () => {
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.header`
   display: flex;
   align-items: center;
   width: 100%;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { CategoryConstants } from "./constants";
+import { CategoryConstants } from "../constants";
 
 const FirstCreate = () => {
   const [btnState, setBtnState] = useState<boolean>(true);
