@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import QuizItem from "../common/QuizItem";
 
@@ -6,7 +7,12 @@ const PopularList = () => {
     <Wrapper>
       <TitleContainer>
         <p className="title">전체 문제집 인기순위</p>
-        <p className="see">인기 순위 보러가기 &#62;</p>
+        <Link
+          to="/popularList"
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <p className="see">인기 순위 보러가기 &#62;</p>
+        </Link>
       </TitleContainer>
       <ItemListWrapper>
         <QuizItem />

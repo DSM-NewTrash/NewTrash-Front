@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import QuizItem from "../common/QuizItem";
 
@@ -6,7 +7,9 @@ const NewList = () => {
     <Wrapper>
       <TitleContainer>
         <p className="title">NEW 문제집</p>
-        <p className="see">최신 문제집 보러가기 &#62;</p>
+        <Link to="/newList" style={{ textDecoration: "none", color: "black" }}>
+          <p className="see">최신 문제집 보러가기 &#62;</p>
+        </Link>
       </TitleContainer>
       <ItemListWrapper>
         <QuizItem />
@@ -46,6 +49,10 @@ const TitleContainer = styled.div`
   }
 `;
 
-const ItemListWrapper = styled.div``;
+const ItemListWrapper = styled.div`
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+`;
 
 export default NewList;
