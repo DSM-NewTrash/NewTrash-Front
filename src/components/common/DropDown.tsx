@@ -74,6 +74,7 @@ const ListWrapper = styled.div`
 `;
 
 const ListOptionBox = styled.div`
+  cursor: pointer;
   width: 100%;
   height: 40px;
   padding: 10px 20px;
