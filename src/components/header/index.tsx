@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Vector from "../../assets/Vector.svg";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -18,18 +17,17 @@ const Header = () => {
           <p>문제 출제하기</p>
         </Link>
       </MenuContainer>
-      <SearchBox>
-        <SearchInput placeholder="문제집을 검색해주세요" type="text" />
-        <img src={Vector} alt="" />
-      </SearchBox>
-      <StoreBox />
-      <UserBox />
+      <Container>
+        <StoreBox />
+        <UserBox />
+      </Container>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.header`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 60px;
@@ -62,39 +60,15 @@ const MenuContainer = styled.div`
   }
 `;
 
-const SearchBox = styled.div`
+const Container = styled.div`
   display: flex;
   align-items: center;
-  width: 400px;
-  height: 40px;
-  border: 1px solid ${({ theme }) => theme.colors.greanScale.main};
-  border-radius: 40px;
-  z-index: 99;
-  padding: 15px 20px;
-
-  > img {
-    margin-left: 20px;
-    width: 20px;
-    height: 20px;
-  }
-`;
-
-const SearchInput = styled.input`
-  width: 100%;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.colors.TextColor};
-  z-index: 2;
-
-  :focus {
-    outline: none;
-  }
+  margin-right: 50px;
 `;
 
 const StoreBox = styled.div`
   width: 40px;
   height: 40px;
-  margin-left: 70px;
   background-color: ${({ theme }) => theme.colors.grayScale.Gray};
 `;
 
