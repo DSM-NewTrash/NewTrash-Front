@@ -46,7 +46,7 @@ const FirstCreate = () => {
         <CategoryList>
           {CategoryConstants.map((item, idx) => (
             <CategoryItem key={idx}>
-              <p>{item}</p>
+              <p>{item.name}</p>
             </CategoryItem>
           ))}
         </CategoryList>

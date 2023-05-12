@@ -1,13 +1,6 @@
 export const CategoryConstants = [
-  "환경오염",
-  "분리수거",
-  "오염",
-  "대기오염",
-  "재해",
-  "수질오염",
-  "해양오염",
-  "방사능오염",
-  "토양오염",
-  "환경",
-  "기타",
+  { name: "환경오염", value: "POLLUTION" },
+  { name: "분리수거", value: "TRASH" },
+  { name: "기타", value: "ETC" },
+  { name: "재해", value: "DISASTER" },
 ];

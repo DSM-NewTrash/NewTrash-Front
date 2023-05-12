@@ -1,12 +1,27 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { CategoryConstants } from "../constants";
 
 const CategoryMenu = () => {
+  const [activetab, setActiveTab] = useState<number>(0);
+  const [itemValue, setItemValue] = useState<string>("POLLUTION");
+
+  const onClickTab = (idx: number, value: string) => {
+    setActiveTab(idx);
+    setItemValue(value);
+  };
+
+  console.log(itemValue);
+
   return (
     <Wrapper>
       {CategoryConstants.map((item, idx) => (
-        <CategoryItem key={idx}>
-          <p>{item}</p>
+        <CategoryItem
+          onClick={() => onClickTab(idx, item.value)}
+          isState={activetab === idx}
+          key={idx}
+        >
+          <p>{item.name}</p>
         </CategoryItem>
       ))}
     </Wrapper>
@@ -20,7 +35,7 @@ const Wrapper = styled.div`
   margin-bottom: 28px;
 `;
 
-const CategoryItem = styled.div`
+const CategoryItem = styled.div<{ isState: boolean }>`
   cursor: pointer;
   width: 110px;
   height: 40px;
@@ -28,13 +43,18 @@ const CategoryItem = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.white};
-  border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+  border: 1px solid
+    ${({ theme, isState }) =>
+      isState
+        ? theme.colors.greanScale.Light_Grean
+        : theme.colors.grayScale.Gray};
   border-radius: 10px;
 
   > p {
     font-weight: 400;
     font-size: 16px;
-    color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme, isState }) =>
+      isState ? theme.colors.greanScale.Light_Grean : theme.colors.black};
   }
 `;
 
