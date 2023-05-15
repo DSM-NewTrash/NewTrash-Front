@@ -11,7 +11,7 @@ const DropDownOption: OptionArrType[] = [
   { option: "최신순", value: "최신순" },
 ];
 
-const List = () => {
+const NewList = () => {
   const [changeTab, setCangeTab] = useState<boolean>(true);
   const [clickToggle, setClickToggle] = useState<string>("false");
   const [activetab, setActiveTab] = useState<number>(0);
@@ -48,7 +48,7 @@ const List = () => {
   return (
     <Wrapper>
       <TitleContainer>
-        <p>전체 문제집 인기순위</p>
+        <p>최신 문제집 인기순위</p>
       </TitleContainer>
       <CategoryMenu />
       <ClassificationWrapper>
@@ -136,4 +136,4 @@ const ItemListWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-export default List;
+export default NewList;

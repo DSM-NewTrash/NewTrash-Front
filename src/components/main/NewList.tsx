@@ -7,7 +7,7 @@ const NewList = () => {
     <Wrapper>
       <TitleContainer>
         <p className="title">NEW 문제집</p>
-        <Link to="/newList" style={{ textDecoration: "none", color: "black" }}>
+        <Link to="/new" style={{ textDecoration: "none", color: "black" }}>
           <p className="see">최신 문제집 보러가기 &#62;</p>
         </Link>
       </TitleContainer>

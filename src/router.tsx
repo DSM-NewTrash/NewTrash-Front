@@ -9,8 +9,8 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/main" element={<MainPage />} />
-        <Route path="/popularList" element={<PopularListPage />} />
-        <Route path="/newList" element={<NewListPage />} />
+        <Route path="/popular" element={<PopularListPage />} />
+        <Route path="/new" element={<NewListPage />} />
       </Routes>
       <Routes>
         <Route path="/first-create" element={<FirstCreatePage />} />

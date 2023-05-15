@@ -9,7 +9,20 @@ const Header = () => {
       </Link>
       <MenuContainer>
         <p>환경 신고</p>
-        <p>문제집</p>
+        <HoverDropdown>
+          <p>문제집</p>
+          <DropdownContent className="DropdownContent">
+            <Link to="/new" style={{ textDecoration: "none", color: "black" }}>
+              <p>최신 문제집</p>
+            </Link>
+            <Link
+              to="/popular"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <p>인기 문제집</p>
+            </Link>
+          </DropdownContent>
+        </HoverDropdown>
         <Link
           to="/first-create"
           style={{ textDecoration: "none", color: "black" }}
@@ -78,6 +91,44 @@ const UserBox = styled.div`
   margin-left: 40px;
   border-radius: 100%;
   border: 1px solid black;
+`;
+
+const HoverDropdown = styled.div`
+  position: relative;
+  display: inline-block;
+
+  > p {
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 16px;
+    color: ${({ theme }) => theme.colors.black};
+  }
+
+  :hover .DropdownContent {
+    display: block;
+  }
+`;
+
+const DropdownContent = styled.div`
+  display: none;
+  position: absolute;
+  top: 20px;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+
+  > a {
+    padding: 8px;
+    text-decoration: none;
+    display: block;
+
+    :hover {
+      background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+      > p {
+        background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+      }
+    }
+  }
 `;
 
 export default Header;

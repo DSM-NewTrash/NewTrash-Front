@@ -7,10 +7,7 @@ const PopularList = () => {
     <Wrapper>
       <TitleContainer>
         <p className="title">전체 문제집 인기순위</p>
-        <Link
-          to="/popularList"
-          style={{ textDecoration: "none", color: "black" }}
-        >
+        <Link to="/popular" style={{ textDecoration: "none", color: "black" }}>
           <p className="see">인기 순위 보러가기 &#62;</p>
         </Link>
       </TitleContainer>
