@@ -137,6 +137,7 @@ const CreateInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
   border-radius: 18px;
   outline: none;
+  color: ${({ theme }) => theme.colors.TextColor};
   font-size: 18px;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
 `;
