@@ -11,8 +11,6 @@ const CategoryMenu = () => {
     setItemValue(value);
   };
 
-  console.log(itemValue);
-
   return (
     <Wrapper>
       {CategoryConstants.map((item, idx) => (

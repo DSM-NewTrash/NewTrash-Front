@@ -1,18 +1,28 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { CategoryConstants } from "../constants";
+import Uproad from "./Uproad";
+import { createQuestion } from "../../store/atom";
+import { useRecoilState } from "recoil";
 
 const FirstCreate = () => {
   const [btnState, setBtnState] = useState<boolean>(true);
-  const [questionState, setQuestionState] = useState({
-    title: "",
-    introduction: "",
-  });
+  const [state, setState] = useRecoilState(createQuestion);
+  const [activetab, setActiveTab] = useState<number>(0);
+
+  const onClickTab = (idx: number, value: string) => {
+    setActiveTab(idx);
+    setState({ ...state, category: value });
+  };
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setQuestionState({ ...questionState, [name]: value });
-    if (questionState.title === "" || questionState.introduction === "") {
+    setState({ ...state, [name]: value });
+    if (
+      state.title === "" ||
+      state.introduction === "" ||
+      state.category === ""
+    ) {
       setBtnState(true);
     } else {
       setBtnState(false);
@@ -21,36 +31,48 @@ const FirstCreate = () => {
 
   return (
     <Wrapper>
-      <InputContainer>
-        <p>문제집명</p>
-        <CreateInput
-          value={questionState.title}
-          name="title"
-          onChange={onChangeInput}
-          type="text"
-          placeholder="문제집명을 입력해주세요"
-        />
-      </InputContainer>
-      <InputContainer>
-        <p>문제집 상세 설명</p>
-        <CreateInput
-          value={questionState.introduction}
-          name="introduction"
-          onChange={onChangeInput}
-          type="text"
-          placeholder="문제집에 대한 상세설명을 입력해주세요"
-        />
-      </InputContainer>
-      <CategoryContainer>
-        <p>카테고리</p>
-        <CategoryList>
-          {CategoryConstants.map((item, idx) => (
-            <CategoryItem key={idx}>
-              <p>{item.name}</p>
-            </CategoryItem>
-          ))}
-        </CategoryList>
-      </CategoryContainer>
+      <InputBox>
+        <ImgInputWrapper>
+          <p>문제집 표지</p>
+          <Uproad />
+        </ImgInputWrapper>
+        <InputWrapper>
+          <InputContainer>
+            <p>문제집명</p>
+            <CreateInput
+              value={state.title}
+              name="title"
+              onChange={onChangeInput}
+              type="text"
+              placeholder="문제집명을 입력해주세요"
+            />
+          </InputContainer>
+          <InputContainer>
+            <p>문제집 상세 설명</p>
+            <CreateInput
+              value={state.introduction}
+              name="introduction"
+              onChange={onChangeInput}
+              type="text"
+              placeholder="문제집에 대한 상세설명을 입력해주세요"
+            />
+          </InputContainer>
+          <CategoryContainer>
+            <p>카테고리</p>
+            <CategoryList>
+              {CategoryConstants.map((item, idx) => (
+                <CategoryItem
+                  onClick={() => onClickTab(idx, item.value)}
+                  isState={activetab === idx}
+                  key={idx}
+                >
+                  <p>{item.name}</p>
+                </CategoryItem>
+              ))}
+            </CategoryList>
+          </CategoryContainer>
+        </InputWrapper>
+      </InputBox>
       <ButtonContainer>
         <NextButton disabled={btnState}>다음으로</NextButton>
       </ButtonContainer>
@@ -62,12 +84,37 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 1150px;
-  height: 650px;
+  height: 720px;
   gap: 42px;
   padding: 50px 55px 60px 55px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 20px;
   box-shadow: 0px 2px 8px rgba(33, 33, 33, 0.25);
+`;
+
+const InputBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: ${({ theme }) => theme.colors.white};
+`;
+
+const InputWrapper = styled.div`
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+  background-color: ${({ theme }) => theme.colors.white};
+`;
+
+const ImgInputWrapper = styled.div`
+  width: 500px;
+  background-color: ${({ theme }) => theme.colors.white};
+  > p {
+    background-color: ${({ theme }) => theme.colors.white};
+    font-weight: 400;
+    font-size: 18px;
+    color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
+  }
 `;
 
 const InputContainer = styled.div`
@@ -115,21 +162,28 @@ const CategoryList = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const CategoryItem = styled.div`
+const CategoryItem = styled.div<{ isState: boolean }>`
   cursor: pointer;
+  width: 110px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px 20px;
-  height: 40px;
-  border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
-  border-radius: 40px;
   background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid
+    ${({ theme, isState }) =>
+      isState
+        ? theme.colors.greanScale.Light_Grean
+        : theme.colors.grayScale.Gray};
+  border-radius: 40px;
 
   > p {
     font-weight: 400;
-    font-size: 18px;
-    color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
+    font-size: 16px;
+    color: ${({ theme, isState }) =>
+      isState
+        ? theme.colors.greanScale.Light_Grean
+        : theme.colors.grayScale.Very_Dark_Gray};
   }
 `;
 
