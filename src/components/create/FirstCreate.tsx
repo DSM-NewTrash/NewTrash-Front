@@ -4,6 +4,7 @@ import { CategoryConstants } from "../constants";
 import Uproad from "./Uproad";
 import { createQuestion } from "../../store/atom";
 import { useRecoilState } from "recoil";
+import { Link } from "react-router-dom";
 
 const FirstCreate = () => {
   const [btnState, setBtnState] = useState<boolean>(true);
@@ -74,7 +75,9 @@ const FirstCreate = () => {
         </InputWrapper>
       </InputBox>
       <ButtonContainer>
-        <NextButton disabled={btnState}>다음으로</NextButton>
+        <Link to="/question-create">
+          <NextButton disabled={btnState}>다음으로</NextButton>
+        </Link>
       </ButtonContainer>
     </Wrapper>
   );

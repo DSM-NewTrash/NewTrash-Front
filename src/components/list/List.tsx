@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import CategoryMenu from "./CategoryMenu";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import QuizItem from "../common/QuizItem";
 import DropDown from "../common/DropDown";
 import { OptionArrType } from "../../interface/common";
@@ -34,9 +33,9 @@ const List = () => {
 
   useEffect(() => {
     if (changeTab === true) {
-      setClickToggle("all");
+      setClickToggle("true");
     } else {
-      setClickToggle("movement");
+      setClickToggle("false");
     }
   }, [changeTab]);
 
