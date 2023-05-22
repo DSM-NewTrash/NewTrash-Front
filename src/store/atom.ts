@@ -9,6 +9,7 @@ export const createQuestion = atom({
     path: "",
     problems: [
       {
+        id: "asdf",
         form: "",
         path: "",
         question: "",
