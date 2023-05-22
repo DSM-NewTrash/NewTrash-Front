@@ -1,38 +1,48 @@
 import styled from "styled-components";
+import logo from "../../assets/logo.svg";
+import user from "../../assets/user.svg";
+import basket from "../../assets/basket.svg";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <Wrapper>
-      <Link to="/main">
-        <LogoBox />
-      </Link>
-      <MenuContainer>
-        <p>환경 신고</p>
-        <HoverDropdown>
-          <p>문제집</p>
-          <DropdownContent className="DropdownContent">
-            <Link to="/new" style={{ textDecoration: "none", color: "black" }}>
-              <p>최신 문제집</p>
-            </Link>
-            <Link
-              to="/popular"
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <p>인기 문제집</p>
-            </Link>
-          </DropdownContent>
-        </HoverDropdown>
-        <Link
-          to="/first-create"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <p>문제 출제하기</p>
+      <MenuWrapper>
+        <Link to="/main">
+          <LogoWrapper>
+            <img width={300} height={40} src={logo} alt="" />
+          </LogoWrapper>
         </Link>
-      </MenuContainer>
+        <MenuContainer>
+          <p>환경 신고</p>
+          <HoverDropdown>
+            <p>문제집</p>
+            <DropdownContent className="DropdownContent">
+              <Link
+                to="/new"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <p>최신 문제집</p>
+              </Link>
+              <Link
+                to="/popular"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <p>인기 문제집</p>
+              </Link>
+            </DropdownContent>
+          </HoverDropdown>
+          <Link
+            to="/first-create"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <p>문제 출제하기</p>
+          </Link>
+        </MenuContainer>
+      </MenuWrapper>
       <Container>
-        <StoreBox />
-        <UserBox />
+        <img height={30} src={basket} alt="" />
+        <img height={30} src={user} alt="" />
       </Container>
     </Wrapper>
   );
@@ -50,11 +60,13 @@ const Wrapper = styled.header`
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const LogoBox = styled.div`
-  width: 250px;
+const MenuWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const LogoWrapper = styled.div`
   height: 40px;
-  margin-left: 30px;
-  background-color: gray;
 `;
 
 const MenuContainer = styled.div`
@@ -77,20 +89,10 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   margin-right: 50px;
-`;
 
-const StoreBox = styled.div`
-  width: 40px;
-  height: 40px;
-  background-color: ${({ theme }) => theme.colors.grayScale.Gray};
-`;
-
-const UserBox = styled.div`
-  width: 40px;
-  height: 40px;
-  margin-left: 40px;
-  border-radius: 100%;
-  border: 1px solid black;
+  > img {
+    margin-right: 70px;
+  }
 `;
 
 const HoverDropdown = styled.div`
