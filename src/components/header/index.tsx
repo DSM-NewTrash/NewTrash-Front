@@ -14,7 +14,12 @@ const Header = () => {
           </LogoWrapper>
         </Link>
         <MenuContainer>
-          <p>환경 신고</p>
+          <Link
+            to="/env-report"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <p>환경 신고</p>
+          </Link>
           <HoverDropdown>
             <p>문제집</p>
             <DropdownContent className="DropdownContent">

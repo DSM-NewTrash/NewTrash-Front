@@ -4,12 +4,14 @@ import MainPage from "./pages/main";
 import NewListPage from "./pages/newList";
 import PopularListPage from "./pages/popularList";
 import CreatePage from "./pages/createQuestion/CreateQuestionPage";
+import EnvReportPage from "./pages/report/EnvReportPage";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/main" element={<MainPage />} />
+        <Route path="/env-report" element={<EnvReportPage />} />
         <Route path="/popular" element={<PopularListPage />} />
         <Route path="/new" element={<NewListPage />} />
       </Routes>
