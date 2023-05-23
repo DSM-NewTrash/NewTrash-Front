@@ -96,6 +96,7 @@ const Container = styled.div`
   margin-right: 50px;
 
   > img {
+    cursor: pointer;
     margin-right: 70px;
   }
 `;
