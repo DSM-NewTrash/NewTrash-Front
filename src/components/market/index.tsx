@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import MarketModal from "./MarketModal";
 
 const money = [
   {
@@ -25,7 +26,8 @@ const money = [
 ];
 
 const Market = () => {
-  const [moneyState, setMoneyState] = useState<number>(0);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [moneyState, setMoneyState] = useState<number>(20000);
   const [btnState, setBtnState] = useState<boolean>(true);
   const [cur, setCur] = useState<number>(0);
 
@@ -38,6 +40,10 @@ const Market = () => {
     } else {
       setBtnState(true);
     }
+  };
+
+  const BtnClick = () => {
+    setModalOpen(true);
   };
 
   return (
@@ -64,9 +70,12 @@ const Market = () => {
         </ChoiceMoneyContainer>
         <ButtonWrapper>
           <p>현재 내 포인트: {moneyState}P</p>
-          <NextButton disabled={btnState}>교환하기</NextButton>
+          <NextButton onClick={BtnClick} disabled={btnState}>
+            교환하기
+          </NextButton>
         </ButtonWrapper>
       </ChoiceMoneyWrapper>
+      {modalOpen && <MarketModal setModalState={setModalOpen} />}
     </Wrapper>
   );
 };
