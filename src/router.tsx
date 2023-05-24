@@ -8,6 +8,7 @@ import EnvReportPage from "./pages/report/EnvReportPage";
 import SignUpPage from "./pages/signup/SignPage";
 import LoginPage from "./pages/login/LoginPage";
 import MarketPage from "./pages/market/MarketPage";
+import MyPagePage from "./pages/mypage";
 
 const Router = () => {
   return (
@@ -28,6 +29,7 @@ const Router = () => {
       </Routes>
       <Routes>
         <Route path="/market" element={<MarketPage />} />
+        <Route path="/mypage" element={<MyPagePage />} />
       </Routes>
     </BrowserRouter>
   );

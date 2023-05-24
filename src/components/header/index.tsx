@@ -12,7 +12,7 @@ const Header = () => {
   };
 
   const onClickProfile = () => {
-    navigate("/");
+    navigate("/mypage");
   };
 
   return (
