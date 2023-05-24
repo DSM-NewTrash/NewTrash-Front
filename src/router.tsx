@@ -7,6 +7,7 @@ import CreatePage from "./pages/createQuestion/CreateQuestionPage";
 import EnvReportPage from "./pages/report/EnvReportPage";
 import SignUpPage from "./pages/signup/SignPage";
 import LoginPage from "./pages/login/LoginPage";
+import MarketPage from "./pages/market/MarketPage";
 
 const Router = () => {
   return (
@@ -24,6 +25,9 @@ const Router = () => {
       <Routes>
         <Route path="/first-create" element={<FirstCreatePage />} />
         <Route path="/question-create" element={<CreatePage />} />
+      </Routes>
+      <Routes>
+        <Route path="/market" element={<MarketPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -2,9 +2,19 @@ import styled from "styled-components";
 import logo from "../../assets/logo.svg";
 import user from "../../assets/user.svg";
 import basket from "../../assets/basket.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const onClickMarket = () => {
+    navigate("/market");
+  };
+
+  const onClickProfile = () => {
+    navigate("/");
+  };
+
   return (
     <Wrapper>
       <MenuWrapper>
@@ -46,8 +56,8 @@ const Header = () => {
         </MenuContainer>
       </MenuWrapper>
       <Container>
-        <img height={30} src={basket} alt="" />
-        <img height={30} src={user} alt="" />
+        <img onClick={onClickMarket} height={30} src={basket} alt="" />
+        <img onClick={onClickProfile} height={30} src={user} alt="" />
       </Container>
     </Wrapper>
   );
