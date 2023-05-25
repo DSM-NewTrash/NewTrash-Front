@@ -3,8 +3,16 @@ import certified from "../../assets/item/certified.svg";
 import send from "../../assets/item/send.svg";
 import graySend from "../../assets/item/graysend.svg";
 import graph from "../../assets/item/graph.svg";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
+
+  const onClickLogout = () => {
+    localStorage.removeItem("access_token");
+    navigate("/");
+  };
+
   return (
     <Wrapper>
       <ImgDiv />
@@ -39,6 +47,7 @@ const Profile = () => {
         <p className="bedge">환경 관련 자격증/서류사진 인증하기</p>
       </UserInfoBlock>
       <NextButton>프로필 수정</NextButton>
+      <LogOutBtn onClick={onClickLogout}>로그아웃</LogOutBtn>
     </Wrapper>
   );
 };
@@ -97,7 +106,7 @@ const IdText = styled.div`
 
 const OneLineIntroBox = styled.div`
   width: 290px;
-  height: 100px;
+  height: 60px;
   border-radius: 5px;
   padding: 8px 14px;
 
@@ -161,7 +170,7 @@ const UserInfoBlock = styled.div`
 
 const NextButton = styled.button`
   cursor: pointer;
-  margin-top: 35px;
+  margin-top: 20px;
   width: 290px;
   height: 50px;
   border: 1px solid ${({ theme }) => theme.colors.greanScale.main};
@@ -170,6 +179,24 @@ const NextButton = styled.button`
   font-size: 18px;
   font-weight: 400;
   color: ${({ theme }) => theme.colors.greanScale.main};
+`;
+
+const LogOutBtn = styled.button`
+  cursor: pointer;
+  margin-top: 20px;
+  width: 290px;
+  height: 50px;
+  border: 1px solid #ff4343;
+  background-color: white;
+  border-radius: 18px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #ff4343;
+
+  :hover {
+    background-color: #ff4343;
+    color: white;
+  }
 `;
 
 export default Profile;
