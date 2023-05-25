@@ -7,18 +7,30 @@ import { ThemeProvider } from "styled-components";
 import { theme } from "./styles/theme";
 import { GlobalStyle } from "./styles/global";
 import { RecoilRoot } from "recoil";
+import { DehydratedState, QueryClient, QueryClientProvider } from "react-query";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+    },
+  },
+});
+
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <RecoilRoot>
-        <GlobalStyle />
-        <App />
-      </RecoilRoot>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <RecoilRoot>
+          <GlobalStyle />
+          <App />
+        </RecoilRoot>
+      </ThemeProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
 

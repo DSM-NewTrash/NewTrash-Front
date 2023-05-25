@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import background from "../../assets/background.png";
 import { useState } from "react";
+import { useSignUp } from "../../utils/api/auth";
 
 const SignUp = () => {
   const [btnState, setBtnState] = useState<boolean>(true);
@@ -24,6 +25,16 @@ const SignUp = () => {
     }
   };
 
+  const { mutate: signUpMutate } = useSignUp();
+
+  const onClickSign = () => {
+    signUpMutate({
+      id: signupState.id,
+      nickname: signupState.nickname,
+      password: signupState.password,
+    });
+  };
+
   return (
     <Wrapper>
       <SignUpWrapper>
@@ -34,6 +45,7 @@ const SignUp = () => {
           onChange={onChangeInput}
           type="text"
           placeholder="NickName"
+          maxLength={11}
         />
         <input
           value={signupState.id}
@@ -41,6 +53,7 @@ const SignUp = () => {
           onChange={onChangeInput}
           type="text"
           placeholder="ID"
+          maxLength={11}
         />
         <input
           value={signupState.password}
@@ -48,8 +61,11 @@ const SignUp = () => {
           onChange={onChangeInput}
           type="password"
           placeholder="Password"
+          maxLength={11}
         />
-        <NextButton disabled={btnState}>회원가입</NextButton>
+        <NextButton disabled={btnState} onClick={onClickSign}>
+          회원가입
+        </NextButton>
       </SignUpWrapper>
     </Wrapper>
   );

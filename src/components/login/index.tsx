@@ -1,22 +1,32 @@
 import styled from "styled-components";
 import background from "../../assets/background.png";
 import { useState } from "react";
+import { useLogin } from "../../utils/api/auth";
 
 const Login = () => {
   const [btnState, setBtnState] = useState<boolean>(true);
-  const [signupState, setSignupState] = useState({
+  const [loginState, setLoginState] = useState({
     id: "",
     password: "",
   });
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setSignupState({ ...signupState, [name]: value });
-    if (signupState.id === "" || signupState.password === "") {
+    setLoginState({ ...loginState, [name]: value });
+    if (loginState.id === "" || loginState.password === "") {
       setBtnState(true);
     } else {
       setBtnState(false);
     }
+  };
+
+  const { mutate: loginMutate } = useLogin();
+
+  const onClickSign = () => {
+    loginMutate({
+      id: loginState.id,
+      password: loginState.password,
+    });
   };
 
   return (
@@ -24,20 +34,24 @@ const Login = () => {
       <SignUpWrapper>
         <TitleText>LOGIN</TitleText>
         <input
-          value={signupState.id}
+          value={loginState.id}
           name="id"
           onChange={onChangeInput}
           type="text"
           placeholder="ID"
+          maxLength={11}
         />
         <input
-          value={signupState.password}
+          value={loginState.password}
           name="password"
           onChange={onChangeInput}
           type="password"
           placeholder="Password"
+          maxLength={11}
         />
-        <NextButton disabled={btnState}>회원가입</NextButton>
+        <NextButton disabled={btnState} onClick={onClickSign}>
+          로그인
+        </NextButton>
       </SignUpWrapper>
     </Wrapper>
   );
