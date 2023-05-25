@@ -3,33 +3,53 @@ import logo from "../../assets/logo.svg";
 import user from "../../assets/user.svg";
 import basket from "../../assets/basket.svg";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import swal from "sweetalert";
 
 const Header = () => {
+  const [tokenState, setTokenState] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (localStorage.getItem("access_token")) {
+      setTokenState(true);
+    } else {
+      setTokenState(false);
+    }
+  }, []);
+
   const onClickMarket = () => {
-    navigate("/market");
+    tokenState
+      ? navigate("/market")
+      : swal("error", "로그인 후 이용 가능합니다.", "error");
   };
 
   const onClickProfile = () => {
     navigate("/mypage");
   };
 
+  const onClickReport = () => {
+    tokenState
+      ? navigate("/env-report")
+      : swal("error", "로그인 후 이용 가능합니다.", "error");
+  };
+
+  const onClickMake = () => {
+    tokenState
+      ? navigate("/first-create")
+      : swal("error", "로그인 후 이용 가능합니다.", "error");
+  };
+
   return (
     <Wrapper>
       <MenuWrapper>
-        <Link to="/main">
+        <Link to="/">
           <LogoWrapper>
             <img width={300} height={40} src={logo} alt="" />
           </LogoWrapper>
         </Link>
         <MenuContainer>
-          <Link
-            to="/env-report"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <p>환경 신고</p>
-          </Link>
+          <p onClick={onClickReport}>환경 신고</p>
           <HoverDropdown>
             <p>문제집</p>
             <DropdownContent className="DropdownContent">
@@ -47,17 +67,30 @@ const Header = () => {
               </Link>
             </DropdownContent>
           </HoverDropdown>
-          <Link
-            to="/first-create"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <p>문제 출제하기</p>
-          </Link>
+          <p onClick={onClickMake}>문제 출제하기</p>
         </MenuContainer>
       </MenuWrapper>
       <Container>
         <img onClick={onClickMarket} height={30} src={basket} alt="" />
-        <img onClick={onClickProfile} height={30} src={user} alt="" />
+        {tokenState ? (
+          <img onClick={onClickProfile} height={30} src={user} alt="" />
+        ) : (
+          <AuthWrapper>
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              로그인
+            </Link>
+            /
+            <Link
+              to="/signup"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              회원가입
+            </Link>
+          </AuthWrapper>
+        )}
       </Container>
     </Wrapper>
   );
@@ -147,6 +180,14 @@ const DropdownContent = styled.div`
       }
     }
   }
+`;
+
+const AuthWrapper = styled.div`
+  width: 110px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  display: flex;
 `;
 
 export default Header;

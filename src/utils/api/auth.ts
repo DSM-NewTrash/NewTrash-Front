@@ -30,7 +30,7 @@ export const useLogin = () => {
     {
       onError: handleError,
       onSuccess: ({ data }) => {
-        navigate("/main");
+        navigate("/");
         localStorage.setItem("access_token", data.access_token);
       },
     }

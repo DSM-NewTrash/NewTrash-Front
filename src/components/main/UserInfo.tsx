@@ -1,25 +1,42 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import school from "../../assets/school.svg";
 
 const UserInfo = () => {
+  const [tokenState, setTokenState] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("access_token")) {
+      setTokenState(true);
+    } else {
+      setTokenState(false);
+    }
+  }, []);
+
   return (
     <Wrapper>
       <UserInfoContainer>
-        <GraphBox />
-        <UserTextContainer>
-          <UserName>Lv.5 토끼끼끼</UserName>
-          <UserDescriptionWrapper>
-            <UserDescription>현재 경험치는 </UserDescription>
-            <UserDescriptionGreen>8425EXP</UserDescriptionGreen>
-            <UserDescription>입니다.</UserDescription>
-          </UserDescriptionWrapper>
-        </UserTextContainer>
+        {tokenState ? (
+          <>
+            <GraphBox />
+            <UserTextContainer>
+              <UserName>Lv.5 토끼끼끼</UserName>
+              <UserDescriptionWrapper>
+                <UserDescription>현재 경험치는 </UserDescription>
+                <UserDescriptionGreen>8425EXP</UserDescriptionGreen>
+                <UserDescription>입니다.</UserDescription>
+              </UserDescriptionWrapper>
+            </UserTextContainer>
+          </>
+        ) : (
+          <NotLoginWrapper>
+            <UserName>로그인 후 확인할 수 있습니다!</UserName>
+          </NotLoginWrapper>
+        )}
       </UserInfoContainer>
       <TodayQuestionBox>
         <img src={school} alt="icon" />
-        <TodayCount>
-          <p>0/80</p>
-        </TodayCount>
+        <TodayCount>{tokenState ? <p>0/80</p> : <p>0/80</p>}</TodayCount>
         <CounterDescription>80문제 남았습니다</CounterDescription>
       </TodayQuestionBox>
     </Wrapper>
@@ -42,6 +59,12 @@ const UserInfoContainer = styled.div`
   box-shadow: 0px 2px 8px rgba(33, 33, 33, 0.25);
   border-radius: 20px;
   background-color: ${({ theme }) => theme.colors.white};
+`;
+
+const NotLoginWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const GraphBox = styled.div`
