@@ -1,5 +1,7 @@
+import { error } from "console";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 
 type HandlersType = {
   [status: number | string]: any;
@@ -9,27 +11,27 @@ export const useApiError = (handlers?: HandlersType) => {
   const navigate = useNavigate();
 
   const handle400 = () => {
-    alert("잘못된 요청입니다.");
+    swal("error", "잘못된 요청입니다.", "error");
   };
   const handle401 = () => {
-    alert("다시 로그인해주세요.");
+    swal("error", "다시 로그인해주세요.", "error");
     navigate("/main");
   };
 
   const handle403 = () => {
-    alert("권한이 없습니다.");
+    swal("error", "권한이 없습니다.", "error");
   };
 
   const handle404 = () => {
-    alert("정보가 없습니다.");
+    swal("error", "정보가 없습니다.", "error");
   };
 
   const handle500 = () => {
-    alert("서버 관리자 및 동아리에 문의해주세요.");
+    swal("error", "서버 관리자 및 동아리에 문의해주세요.", "error");
   };
 
   const handleDefault = () => {
-    alert("네트워크 상태를 확인해주세요.");
+    swal("error", "네트워크를 상태를 확인해주세요.", "error");
   };
 
   // 기본적으로 처리될 수 있는 에러 핸들러
