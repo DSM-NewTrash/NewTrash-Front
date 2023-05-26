@@ -306,6 +306,10 @@ const CreateInput = styled.input`
   color: ${({ theme }) => theme.colors.TextColor};
   font-size: 18px;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 const ImgInputWrapper = styled.div`
@@ -388,6 +392,10 @@ const FourAnswerInput = styled.div`
     background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
     font-size: 20px;
     font-weight: 400;
+
+    :focus {
+      background-color: ${({ theme }) => theme.colors.white};
+    }
   }
 `;
 

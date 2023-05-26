@@ -55,7 +55,7 @@ const EnvReport = () => {
       <InputBox>
         <InputWrapper>
           <InputContainer>
-            <p>문제집 상세 설명</p>
+            <p>환경신고 제목</p>
             <CreateInput
               value={reportState.title}
               name="title"
@@ -159,6 +159,10 @@ const CreateInput = styled.input`
   color: ${({ theme }) => theme.colors.TextColor};
   font-size: 18px;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 const CreateArea = styled.textarea`
@@ -171,6 +175,10 @@ const CreateArea = styled.textarea`
   font-size: 18px;
   resize: none;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 const NextButton = styled.button`

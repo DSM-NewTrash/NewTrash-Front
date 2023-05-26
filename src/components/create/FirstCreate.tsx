@@ -143,6 +143,10 @@ const CreateInput = styled.input`
   color: ${({ theme }) => theme.colors.TextColor};
   font-size: 18px;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 const CategoryContainer = styled.div`
