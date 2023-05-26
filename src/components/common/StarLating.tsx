@@ -66,7 +66,8 @@ const StarLating = ({ Input, star_lating }: Props) => {
 const Stars = styled.div<{ inputSize: boolean }>`
   display: flex;
   align-items: center;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
+  margin-left: 5px;
 
   .star {
     margin-right: 5px;

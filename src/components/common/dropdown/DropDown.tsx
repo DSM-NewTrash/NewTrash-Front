@@ -19,7 +19,7 @@ const DropDown = ({ onChangeValue, options, value }: DropDownProps) => {
   }, [value]);
 
   return (
-    <OutSideClickHandler onOutSideClick={() => setIsFold(!isFold)}>
+    <OutSideClickHandler onOutSideClick={() => setIsFold(false)}>
       <Wrapper>
         <label onClick={() => setIsFold(!isFold)}>
           <TitleValue>{selectedValue}</TitleValue>

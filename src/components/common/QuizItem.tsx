@@ -58,8 +58,10 @@ const QuizItem = () => {
       <ContentWrapper>
         <QuizInfoWrapper>
           <p className="title">00문제집</p>
-          <StarLating Input={false} star_lating={3} />
-          <p className="starLating">(3)</p>
+          <div className="star">
+            <StarLating Input={false} star_lating={5} />
+            <p className="starLating">(3)</p>
+          </div>
         </QuizInfoWrapper>
         <CategoryList>
           <CategoryItem>
@@ -79,7 +81,7 @@ const Wrapper = styled.div`
   background: #ffffff;
   box-shadow: 0px 1.71064px 6.84255px rgba(33, 33, 33, 0.25);
   border-radius: 6px;
-  width: 270px;
+  width: 280px;
   height: 300px;
 `;
 
@@ -92,13 +94,18 @@ const ImgWrapper = styled.div`
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 18px 24px;
+  padding: 18px 20px;
 `;
 
 const QuizInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  .star {
+    display: flex;
+    align-items: center;
+  }
 
   .title {
     font-weight: 400;
@@ -107,6 +114,7 @@ const QuizInfoWrapper = styled.div`
   }
 
   .starLating {
+    margin-left: 5px;
     font-weight: 400;
     font-size: 16px;
     color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
@@ -122,6 +130,7 @@ const CategoryList = styled.div`
 const CategoryItem = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
 
   width: 60px;
   height: 25px;
@@ -139,9 +148,9 @@ const HoverCover = styled.div`
   position: absolute;
   padding: 20px 16px;
   border-radius: 6px;
-  opacity: 0.7;
+  opacity: 0.83;
   background-color: ${({ theme }) => theme.colors.black};
-  width: 270px;
+  width: 280px;
   height: 300px;
 `;
 
