@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { useState, useMemo } from "react";
-import arrow from "../../assets/arrow.svg";
-import { DropDownProps, OptionArrType } from "../../interface/common";
+import arrow from "../../../assets/arrow.svg";
+import { DropDownProps, OptionArrType } from "../../../interface/common";
+import OutSideClickHandler from "./OutSideClick";
 
 const DropDown = ({ onChangeValue, options, value }: DropDownProps) => {
   const [isFold, setIsFold] = useState<boolean>(false);
@@ -18,21 +19,26 @@ const DropDown = ({ onChangeValue, options, value }: DropDownProps) => {
   }, [value]);
 
   return (
-    <Wrapper>
-      <label onClick={() => setIsFold(!isFold)}>
-        <TitleValue>{selectedValue}</TitleValue>
-        <ArrowImg isFold={isFold} src={arrow} alt=">" />
-      </label>
-      {isFold && (
-        <ListWrapper>
-          {options.map((item, idx) => (
-            <ListOptionBox key={idx} onClick={() => onClickOption(item.value)}>
-              {item.value}
-            </ListOptionBox>
-          ))}
-        </ListWrapper>
-      )}
-    </Wrapper>
+    <OutSideClickHandler onOutSideClick={() => setIsFold(!isFold)}>
+      <Wrapper>
+        <label onClick={() => setIsFold(!isFold)}>
+          <TitleValue>{selectedValue}</TitleValue>
+          <ArrowImg isFold={isFold} src={arrow} alt=">" />
+        </label>
+        {isFold && (
+          <ListWrapper>
+            {options.map((item, idx) => (
+              <ListOptionBox
+                key={idx}
+                onClick={() => onClickOption(item.value)}
+              >
+                {item.value}
+              </ListOptionBox>
+            ))}
+          </ListWrapper>
+        )}
+      </Wrapper>
+    </OutSideClickHandler>
   );
 };
 
@@ -76,8 +82,10 @@ const ListWrapper = styled.div`
 const ListOptionBox = styled.div`
   cursor: pointer;
   width: 100%;
-  height: 40px;
+  height: 34px;
   padding: 10px 20px;
+  display: flex;
+  align-items: center;
   border-radius: inherit;
 `;
 

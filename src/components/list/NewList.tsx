@@ -3,7 +3,7 @@ import CategoryMenu from "./CategoryMenu";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import QuizItem from "../common/QuizItem";
-import DropDown from "../common/DropDown";
+import DropDown from "../common/dropdown/DropDown";
 import { OptionArrType } from "../../interface/common";
 
 const DropDownOption: OptionArrType[] = [

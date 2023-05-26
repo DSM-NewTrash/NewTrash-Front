@@ -2,7 +2,7 @@ import styled from "styled-components";
 import CategoryMenu from "./CategoryMenu";
 import { useState, useEffect } from "react";
 import QuizItem from "../common/QuizItem";
-import DropDown from "../common/DropDown";
+import DropDown from "../common/dropdown/DropDown";
 import { OptionArrType } from "../../interface/common";
 
 const DropDownOption: OptionArrType[] = [
