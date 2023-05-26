@@ -1,27 +1,33 @@
 import { useState } from "react";
 import styled from "styled-components";
 import MarketModal from "./MarketModal";
+import { hfive, mfive, mone, mthree, mtwo } from "../../assets/market/index";
 
 const money = [
   {
-    value: 1000,
-    name: "1,000원",
-  },
-  {
     value: 5000,
     name: "5,000원",
+    img: <img src={hfive} alt="" />,
   },
   {
     value: 10000,
     name: "10,000원",
+    img: <img src={mone} alt="" />,
+  },
+  {
+    value: 20000,
+    name: "20,000원",
+    img: <img src={mtwo} alt="" />,
   },
   {
     value: 30000,
     name: "30,000원",
+    img: <img src={mthree} alt="" />,
   },
   {
     value: 50000,
     name: "50,000원",
+    img: <img src={mfive} alt="" />,
   },
 ];
 
@@ -50,7 +56,7 @@ const Market = () => {
     <Wrapper>
       <CardContainer>
         <h1>문화상품권</h1>
-        <div className="card">{money[cur].name}</div>
+        {money[cur].img}
       </CardContainer>
       <ChoiceMoneyWrapper>
         <ChoiceMoneyHeader>
@@ -130,7 +136,7 @@ const ChoiceMoneyContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
-  margin-bottom: 142px;
+  margin-bottom: 194px;
 `;
 
 const ChoiceMoney = styled.div<{ state: boolean }>`
