@@ -30,6 +30,11 @@ const FirstCreate = () => {
     }
   };
 
+  const onChangeArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value, name } = e.target;
+    setState({ ...state, [name]: value });
+  };
+
   return (
     <Wrapper>
       <InputBox>
@@ -50,11 +55,10 @@ const FirstCreate = () => {
           </InputContainer>
           <InputContainer>
             <p>문제집 상세 설명</p>
-            <CreateInput
+            <CreateArea
               value={state.introduction}
               name="introduction"
-              onChange={onChangeInput}
-              type="text"
+              onChange={onChangeArea}
               placeholder="문제집에 대한 상세설명을 입력해주세요"
             />
           </InputContainer>
@@ -127,6 +131,7 @@ const InputContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 
   > p {
+    margin-top: 5px;
     background-color: ${({ theme }) => theme.colors.white};
     font-weight: 400;
     font-size: 18px;
@@ -142,6 +147,22 @@ const CreateInput = styled.input`
   outline: none;
   color: ${({ theme }) => theme.colors.TextColor};
   font-size: 18px;
+  background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
+const CreateArea = styled.textarea`
+  height: 210px;
+  padding: 15px 28px;
+  border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+  border-radius: 18px;
+  outline: none;
+  color: ${({ theme }) => theme.colors.TextColor};
+  font-size: 18px;
+  resize: none;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
 
   :focus {
