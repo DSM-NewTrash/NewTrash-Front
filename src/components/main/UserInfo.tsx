@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import school from "../../assets/school.svg";
+import { useApiError } from "../../hooks/useApiError";
+import { useQuery } from "react-query";
+import { getMyExpLevel, getMyProblemCount } from "../../utils/api/user";
 
 const UserInfo = () => {
   const [tokenState, setTokenState] = useState<boolean>(false);
@@ -13,6 +16,16 @@ const UserInfo = () => {
     }
   }, []);
 
+  const { handleError } = useApiError();
+
+  const { data: problem } = useQuery(["prolem"], () => getMyProblemCount(), {
+    onError: handleError,
+  });
+
+  const { data: MyPage } = useQuery(["mypage"], () => getMyExpLevel(), {
+    onError: handleError,
+  });
+
   return (
     <Wrapper>
       <UserInfoContainer>
@@ -20,10 +33,14 @@ const UserInfo = () => {
           <>
             <GraphBox />
             <UserTextContainer>
-              <UserName>Lv.5 토끼끼끼</UserName>
+              <UserName>
+                Lv.{MyPage?.data.level} {MyPage?.data.nickname}
+              </UserName>
               <UserDescriptionWrapper>
                 <UserDescription>현재 경험치는 </UserDescription>
-                <UserDescriptionGreen>8425EXP</UserDescriptionGreen>
+                <UserDescriptionGreen>
+                  {MyPage?.data.exp}EXP
+                </UserDescriptionGreen>
                 <UserDescription>입니다.</UserDescription>
               </UserDescriptionWrapper>
             </UserTextContainer>
@@ -36,8 +53,12 @@ const UserInfo = () => {
       </UserInfoContainer>
       <TodayQuestionBox>
         <img src={school} alt="icon" />
-        <TodayCount>{tokenState ? <p>0/80</p> : <p>0/80</p>}</TodayCount>
-        <CounterDescription>80문제 남았습니다</CounterDescription>
+        <TodayCount>
+          {tokenState ? <p>{problem?.data.count}/80</p> : <p>0/80</p>}
+        </TodayCount>
+        <CounterDescription>
+          {problem?.data.count}문제 남았습니다
+        </CounterDescription>
       </TodayQuestionBox>
     </Wrapper>
   );

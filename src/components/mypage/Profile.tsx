@@ -1,11 +1,17 @@
+import { useState } from "react";
 import styled from "styled-components";
 import certified from "../../assets/item/certified.svg";
 import send from "../../assets/item/send.svg";
 import graySend from "../../assets/item/graysend.svg";
 import graph from "../../assets/item/graph.svg";
 import { useNavigate } from "react-router-dom";
+import CertifiedModal from "./CertifiedModal";
+import { useApiError } from "../../hooks/useApiError";
+import { useQuery } from "react-query";
+import { getMyPageInfo } from "../../utils/api/user";
 
 const Profile = () => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const onClickLogout = () => {
@@ -13,34 +19,52 @@ const Profile = () => {
     navigate("/");
   };
 
+  const onClickModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const { handleError } = useApiError();
+
+  const { data: mypage } = useQuery(["mypage"], () => getMyPageInfo(), {
+    onError: handleError,
+  });
+
   return (
     <Wrapper>
-      <ImgDiv />
+      <ImgDiv>
+        <img height={80} src={mypage?.data.profile} alt="" />
+      </ImgDiv>
       <UserInfoContainer>
-        <BadgeDiv />
-        <p>토끼끼끼</p>
-        <img src={certified} alt="" />
+        <img height={40} src={mypage?.data.badge_image} alt="" />
+        <p>{mypage?.data.nickname}</p>
+        {mypage?.data.is_certificate && <img src={certified} alt="" />}
       </UserInfoContainer>
-      <IdText>#Tokki</IdText>
+      <IdText>#{mypage?.data.id}</IdText>
       <OneLineIntroBox>
         <h1>한 줄 소개</h1>
         <hr />
-        <p>dkdkdkdkdk</p>
+        <p>{mypage?.data.introduce}</p>
       </OneLineIntroBox>
       <UserInfoBlock>
         <div>
           <img src={graph} alt="" />
         </div>
-        <p className="level">Lv.2 반달가슴곰</p>
-        <p className="exp">경험치 8000</p>
+        <p className="level">
+          Lv.{mypage?.data.level} {mypage?.data.badge}
+        </p>
+        <p className="exp">경험치 {mypage?.data.exp}</p>
       </UserInfoBlock>
       <UserInfoBlock>
         <div>
-          <img src={send} alt="" />
+          <img src={mypage?.data.is_certificate ? send : graySend} alt="" />
         </div>
-        <p className="level">환경 자격증</p>
+        {mypage?.data.is_certificate ? (
+          <p className="level">{mypage?.data.certificate}</p>
+        ) : (
+          <p className="level">자격증을 인증해주세요.</p>
+        )}
       </UserInfoBlock>
-      <UserInfoBlock style={{ cursor: "pointer" }}>
+      <UserInfoBlock onClick={onClickModalOpen} style={{ cursor: "pointer" }}>
         <div>
           <img src={graySend} alt="" />
         </div>
@@ -48,6 +72,7 @@ const Profile = () => {
       </UserInfoBlock>
       <NextButton>프로필 수정</NextButton>
       <LogOutBtn onClick={onClickLogout}>로그아웃</LogOutBtn>
+      {modalOpen && <CertifiedModal setModalState={setModalOpen} />}
     </Wrapper>
   );
 };
@@ -66,6 +91,9 @@ const Wrapper = styled.div`
 `;
 
 const ImgDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 130px;
   height: 130px;
   margin-bottom: 20px;
