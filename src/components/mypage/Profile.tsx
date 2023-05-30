@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import styled from "styled-components";
 import certified from "../../assets/item/certified.svg";
 import send from "../../assets/item/send.svg";
 import graySend from "../../assets/item/graysend.svg";
 import graph from "../../assets/item/graph.svg";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import CertifiedModal from "./CertifiedModal";
 import { useApiError } from "../../hooks/useApiError";
 import { useQuery } from "react-query";
-import { getMyPageInfo } from "../../utils/api/user";
+import { getMyPageInfo, useMyPagePatch } from "../../utils/api/user";
+import userCamera from "../../assets/userCamera.svg";
+import { useUploadImg } from "../../utils/api/upload";
 
 const Profile = () => {
+  const [modState, setModState] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [modInfo, setModInfo] = useState({
+    profile: "",
+    nickname: "",
+    introduce: "",
+  });
   const navigate = useNavigate();
 
   const onClickLogout = () => {
@@ -23,27 +32,124 @@ const Profile = () => {
     setModalOpen(true);
   };
 
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setModInfo({ ...modInfo, [name]: value });
+  };
+
   const { handleError } = useApiError();
 
   const { data: mypage } = useQuery(["mypage"], () => getMyPageInfo(), {
     onError: handleError,
   });
 
+  const { mutate: imgURL } = useUploadImg();
+  const { mutate: patchMyPage } = useMyPagePatch();
+
+  const onUploadImageButtonClick = useCallback(() => {
+    if (!inputRef.current) {
+      return;
+    }
+    inputRef.current.click();
+  }, []);
+
+  const onUpload = (e: any) => {
+    e.preventDefault();
+
+    if (e.target.files) {
+      const uploadFile = e.target.files[0];
+      const formData = new FormData();
+      formData.append("files", uploadFile);
+
+      imgURL(formData, {
+        onSuccess: (data) => {
+          setModInfo({ ...modInfo, profile: data.data.url });
+        },
+      });
+    }
+  };
+
+  const onClickMod = () => {
+    if (modState === false) {
+      setModState(true);
+    } else {
+      const profileValue = Array.isArray(modInfo.profile)
+        ? modInfo.profile[0]
+        : modInfo.profile;
+
+      patchMyPage({
+        introduce: modInfo.introduce,
+        nickname: modInfo.nickname,
+        profile: profileValue,
+      });
+      setModState(false);
+    }
+  };
+
   return (
     <Wrapper>
       <ImgDiv>
-        <img height={80} src={mypage?.data.profile} alt="" />
+        <img
+          id="profile"
+          width={125}
+          height={120}
+          style={{ borderRadius: "100%" }}
+          src={mypage?.data.profile}
+          alt=""
+        />
+        {modState && (
+          <>
+            <input
+              className="imgInput"
+              type="file"
+              accept="image/*"
+              ref={inputRef}
+              onChange={onUpload}
+            />
+            <img
+              id="change"
+              src={userCamera}
+              onClick={onUploadImageButtonClick}
+              alt=""
+            />{" "}
+          </>
+        )}
       </ImgDiv>
       <UserInfoContainer>
-        <img height={40} src={mypage?.data.badge_image} alt="" />
-        <p>{mypage?.data.nickname}</p>
-        {mypage?.data.is_certificate && <img src={certified} alt="" />}
+        {modState ? (
+          <ModNickNameInput
+            name="nickname"
+            value={modInfo.nickname}
+            type="text"
+            onChange={onChangeInput}
+          />
+        ) : (
+          <>
+            <img
+              height={40}
+              style={{ borderRadius: "100%" }}
+              src={mypage?.data.badge_image}
+              alt=""
+            />
+            <p>{mypage?.data.nickname}</p>
+            {mypage?.data.is_certificate && <img src={certified} alt="" />}
+          </>
+        )}
       </UserInfoContainer>
       <IdText>#{mypage?.data.id}</IdText>
-      <OneLineIntroBox>
+      <OneLineIntroBox isMod={modState}>
         <h1>한 줄 소개</h1>
         <hr />
-        <p>{mypage?.data.introduce}</p>
+        {modState ? (
+          <ModIntroInput
+            value={modInfo.introduce}
+            name="introduce"
+            type="text"
+            onChange={onChangeInput}
+          />
+        ) : (
+          <p>{mypage?.data.introduce}</p>
+        )}
       </OneLineIntroBox>
       <UserInfoBlock>
         <div>
@@ -70,7 +176,7 @@ const Profile = () => {
         </div>
         <p className="bedge">환경 관련 자격증/서류사진 인증하기</p>
       </UserInfoBlock>
-      <NextButton>프로필 수정</NextButton>
+      <NextButton onClick={onClickMod}>프로필 수정</NextButton>
       <LogOutBtn onClick={onClickLogout}>로그아웃</LogOutBtn>
       {modalOpen && <CertifiedModal setModalState={setModalOpen} />}
     </Wrapper>
@@ -98,13 +204,19 @@ const ImgDiv = styled.div`
   height: 130px;
   margin-bottom: 20px;
   border-radius: 100%;
-  border: 1px solid black;
-`;
+  position: relative;
 
-const BadgeDiv = styled.div`
-  width: 40px;
-  height: 40px;
-  background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+  #change {
+    cursor: pointer;
+    position: absolute;
+    right: 5px;
+    bottom: -5px;
+    border-radius: 100%;
+  }
+
+  .imgInput {
+    display: none;
+  }
 `;
 
 const UserInfoContainer = styled.div`
@@ -118,6 +230,7 @@ const UserInfoContainer = styled.div`
     margin-left: 7px;
     font-size: 22px;
     color: ${({ theme }) => theme.colors.black};
+    background-color: ${({ theme }) => theme.colors.white};
   }
 
   > img {
@@ -130,11 +243,40 @@ const IdText = styled.div`
   font-weight: 400;
   font-size: 18px;
   color: ${({ theme }) => theme.colors.grayScale.Dark_Gray};
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const OneLineIntroBox = styled.div`
+const ModNickNameInput = styled.input`
+  width: 140px;
+  height: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+  padding: 5px 5px;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+  outline: none;
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
+const ModIntroInput = styled.input`
+  outline: none;
+  width: 100%;
+  height: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+  padding: 5px 5px;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+
+  :focus {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
+const OneLineIntroBox = styled.div<{ isMod: boolean }>`
   width: 290px;
-  height: 60px;
+  height: ${({ isMod }) => (isMod ? "90px" : "70px")};
   border-radius: 5px;
   padding: 8px 14px;
 
@@ -207,6 +349,11 @@ const NextButton = styled.button`
   font-size: 18px;
   font-weight: 400;
   color: ${({ theme }) => theme.colors.greanScale.main};
+
+  :hover {
+    background-color: ${({ theme }) => theme.colors.greanScale.main};
+    color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 const LogOutBtn = styled.button`
