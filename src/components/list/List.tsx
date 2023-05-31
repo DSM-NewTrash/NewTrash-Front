@@ -22,7 +22,7 @@ const List = () => {
       value: "false",
     },
     {
-      name: "벳지유저",
+      name: "뱃지유저",
       value: "true",
     },
   ];
