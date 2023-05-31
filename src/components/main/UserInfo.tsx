@@ -4,6 +4,7 @@ import school from "../../assets/school.svg";
 import { useApiError } from "../../hooks/useApiError";
 import { useQuery } from "react-query";
 import { getMyExpLevel, getMyProblemCount } from "../../utils/api/user";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const UserInfo = () => {
   const [tokenState, setTokenState] = useState<boolean>(false);
@@ -26,12 +27,25 @@ const UserInfo = () => {
     onError: handleError,
   });
 
+  let expResult = (MyPage?.data.exp! / MyPage?.data.max_exp!) * 100;
+
   return (
     <Wrapper>
       <UserInfoContainer>
         {tokenState ? (
           <>
-            <GraphBox />
+            <GraphBox>
+              <CircularProgress
+                style={{
+                  width: "220px",
+                  height: "220px",
+                  color: "#69d2a6",
+                }}
+                variant="determinate"
+                value={expResult}
+              />
+              <img height={150} src={MyPage?.data.badge_image} alt="" />
+            </GraphBox>
             <UserTextContainer>
               <UserName>
                 Lv.{MyPage?.data.level} {MyPage?.data.nickname}
@@ -89,10 +103,24 @@ const NotLoginWrapper = styled.div`
 `;
 
 const GraphBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 230px;
   height: 230px;
   border-radius: 100%;
-  background-color: black;
+
+  .css-1idz92c-MuiCircularProgress-svg {
+    background-color: ${({ theme }) => theme.colors.white};
+  }
+
+  .css-oxts8u-MuiCircularProgress-circle {
+    stroke-width: 2px;
+  }
+
+  > img {
+    position: absolute;
+  }
 `;
 
 const UserTextContainer = styled.div`

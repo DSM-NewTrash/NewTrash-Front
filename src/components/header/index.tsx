@@ -164,19 +164,23 @@ const DropdownContent = styled.div`
   display: none;
   position: absolute;
   top: 20px;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  right: -45px;
+  min-width: 120px;
+  box-shadow: 0px 2px 8px rgba(33, 33, 33, 0.25);
   z-index: 1;
 
   > a {
-    padding: 8px;
+    padding: 12px;
     text-decoration: none;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     :hover {
-      background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+      background-color: ${({ theme }) => theme.colors.greanScale.main};
       > p {
-        background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
+        background-color: ${({ theme }) => theme.colors.greanScale.main};
+        color: ${({ theme }) => theme.colors.white};
       }
     }
   }

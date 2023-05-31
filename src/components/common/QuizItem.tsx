@@ -148,7 +148,7 @@ const HoverCover = styled.div`
   position: absolute;
   padding: 20px 16px;
   border-radius: 6px;
-  opacity: 0.83;
+  opacity: 0.855;
   background-color: ${({ theme }) => theme.colors.black};
   width: 280px;
   height: 300px;
@@ -162,6 +162,7 @@ const CoverContent = styled.div`
 `;
 
 const CoverItem = styled.div`
+  z-index: 99;
   display: flex;
   background-color: ${({ theme }) => theme.colors.black};
 
