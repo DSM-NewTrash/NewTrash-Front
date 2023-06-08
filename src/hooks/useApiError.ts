@@ -15,6 +15,7 @@ export const useApiError = (handlers?: HandlersType) => {
   };
   const handle401 = () => {
     swal("error", "다시 로그인해주세요.", "error");
+    localStorage.removeItem("access_token");
     navigate("/login");
   };
 
