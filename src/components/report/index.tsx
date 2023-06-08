@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import swal from "sweetalert";
 
 const EnvReport = () => {
   const [btnState, setBtnState] = useState<boolean>(true);
@@ -49,6 +51,13 @@ const EnvReport = () => {
     }
     inputRef.current.click();
   }, []);
+
+  const navigate = useNavigate();
+
+  const onClickReport = () => {
+    swal("신고하기", "신고가 접수되었습니다.", "success");
+    navigate("/");
+  };
 
   return (
     <Wrapper>
@@ -104,7 +113,9 @@ const EnvReport = () => {
           </ImgInput>
         </ImgInputWrapper>
       </InputBox>
-      <NextButton disabled={btnState}>신고하기</NextButton>
+      <NextButton disabled={btnState} onClick={onClickReport}>
+        신고하기
+      </NextButton>
     </Wrapper>
   );
 };
