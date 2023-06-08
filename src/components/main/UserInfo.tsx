@@ -120,6 +120,7 @@ const GraphBox = styled.div`
 
   > img {
     position: absolute;
+    border-radius: 100%;
   }
 `;
 

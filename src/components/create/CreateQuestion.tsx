@@ -5,6 +5,7 @@ import { createQuestion } from "../../store/atom";
 import { useRecoilState } from "recoil";
 import React from "react";
 import plus from "../../assets/plus.svg";
+import { useMakeProblem } from "../../utils/api/problem";
 
 const InputObject = [
   {
@@ -21,10 +22,16 @@ const InputObject = [
   },
 ];
 
+const OXObject = [
+  { name: "O", value: 1 },
+  { name: "X", value: 0 },
+];
+
 const CreateQuestion = () => {
   const [state, setState] = useRecoilState(createQuestion);
   const [btnState, setBtnState] = useState<boolean>(true);
   const [activetab, setActiveTab] = useState<number>(0);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [toggleState, setToggleState] = useState<boolean>();
   const [imageSrc, setImageSrc]: any = useState(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -79,6 +86,7 @@ const CreateQuestion = () => {
         : v;
     });
     setState({ ...state, problems: changedProblem });
+    console.log(state);
   };
 
   const onUpload = (e: any) => {
@@ -121,25 +129,24 @@ const CreateQuestion = () => {
 
   return (
     <Wrapper>
-      {state.problems.map((value) => {
+      <MenuWrapper>
+        {ToggleValue.map((item, idx) => (
+          <ToggleDiv key={idx} onClick={() => onClickTab(idx + 1)}>
+            <ToggleState isState={activetab === idx}>
+              <Check color={activetab === idx} />
+            </ToggleState>
+            <p>{item.name}</p>
+          </ToggleDiv>
+        ))}
+        <NextButton>출제완료</NextButton>
+      </MenuWrapper>
+      {state.problems.map((value, idx) => {
         return (
           <React.Fragment key={value.id}>
-            <MenuWrapper>
-              {ToggleValue.map((item, idx) => (
-                <ToggleDiv key={idx} onClick={() => onClickTab(idx)}>
-                  <ToggleState isState={activetab === idx}>
-                    <Check color={activetab === idx} />
-                  </ToggleState>
-                  <p>{item.name}</p>
-                </ToggleDiv>
-              ))}
-              <NextButton disabled={btnState}>출제완료</NextButton>
-            </MenuWrapper>
-
             <InputBox>
               <ProblemHead>
                 <p>문제</p>
-                <p>1/20</p>
+                <p>{idx + 1} /20</p>
               </ProblemHead>
               {toggleState ? (
                 <>
@@ -175,18 +182,79 @@ const CreateQuestion = () => {
                     <AnswerInputContainer>
                       <p>답 선택</p>
                       <FourAnswerInputContainer>
-                        {InputObject.map((item) => (
-                          <FourAnswerInput key={item.name}>
-                            <div>{item.name}</div>
-                            <input placeholder="답을 입력해주세요" />
-                          </FourAnswerInput>
+                        {InputObject.map((item, answerIdx) => (
+                          <label key={item.name}>
+                            <FourAnswerInput select={selectedIdx === idx}>
+                              <div>{item.name}</div>
+                              <input
+                                type="text"
+                                value={
+                                  state.problems[idx].answers[answerIdx].answer
+                                }
+                                placeholder="답을 입력해주세요"
+                              />
+                            </FourAnswerInput>
+                          </label>
                         ))}
                       </FourAnswerInputContainer>
                     </AnswerInputContainer>
+                    <ExplanationContainer>
+                      <p>풀이</p>
+                      <input
+                        type="text"
+                        value={state.problems[idx].explanation}
+                        placeholder="풀이를 작성해주세요."
+                      />
+                    </ExplanationContainer>
                   </InputContainer>
                 </>
               ) : (
-                "b"
+                <>
+                  <InputContainer>
+                    <InputWrapper>
+                      <CreateInput
+                        value={value.question}
+                        name="question"
+                        onChange={(e) => onChangeInput(e, value.id)}
+                        type="text"
+                        placeholder="문제를 작성해주세요"
+                      />
+                      <ImgInputWrapper>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          ref={inputRef}
+                          onChange={onUpload}
+                        />
+                        <ImgInput onClick={onUploadImageButtonClick}>
+                          <img width={"100%"} src={imageSrc} alt="" />
+                          {imageSrc ? (
+                            ""
+                          ) : (
+                            <>
+                              <p>문제집 표시에 들어갈</p>
+                              <p>사진을 넣어주세요</p>
+                            </>
+                          )}
+                        </ImgInput>
+                      </ImgInputWrapper>
+                    </InputWrapper>
+                    <AnswerInputContainer>
+                      <p>답 선택</p>
+                      <FourAnswerInputContainer>
+                        {OXObject.map((item) => (
+                          <OXAnswerContainer>
+                            <button> {item.name}</button>
+                          </OXAnswerContainer>
+                        ))}
+                      </FourAnswerInputContainer>
+                    </AnswerInputContainer>
+                    <OXExplanationContainer>
+                      <p>풀이</p>
+                      <input placeholder="풀이를 작성해주세요." />
+                    </OXExplanationContainer>
+                  </InputContainer>
+                </>
               )}
             </InputBox>
           </React.Fragment>
@@ -260,7 +328,7 @@ const InputBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 1150px;
-  height: 800px;
+  height: 100%;
   margin-top: 20px;
   margin-bottom: 20px;
   gap: 22px;
@@ -360,7 +428,7 @@ const FourAnswerInputContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const FourAnswerInput = styled.div`
+const FourAnswerInput = styled.div<{ select: boolean }>`
   cursor: pointer;
   width: 505px;
   display: flex;
@@ -374,10 +442,13 @@ const FourAnswerInput = styled.div`
     align-items: center;
     width: 50px;
     height: 50px;
-    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+    border: 1px solid
+      ${({ theme, select }) =>
+        select ? theme.colors.greanScale.main : theme.colors.grayScale.Gray};
     border-radius: 100%;
     background-color: ${({ theme }) => theme.colors.white};
-    color: ${({ theme }) => theme.colors.grayScale.Gray};
+    color: ${({ theme, select }) =>
+      select ? theme.colors.greanScale.main : theme.colors.grayScale.Gray};
     font-size: 22px;
     font-weight: 400;
   }
@@ -388,7 +459,9 @@ const FourAnswerInput = styled.div`
     padding: 15px 24px;
     border-radius: 18px;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+    border: 1px solid
+      ${({ theme, select }) =>
+        select ? theme.colors.greanScale.main : theme.colors.grayScale.Gray};
     background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
     font-size: 20px;
     font-weight: 400;
@@ -399,9 +472,88 @@ const FourAnswerInput = styled.div`
   }
 `;
 
+const OXAnswerContainer = styled.div`
+  width: 505px;
+  display: flex;
+  justify-content: space-between;
+  background-color: ${({ theme }) => theme.colors.white};
+
+  > button {
+    cursor: pointer;
+    width: 505px;
+    height: 70px;
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+    background-color: ${({ theme }) => theme.colors.white};
+    font-size: 24px;
+    font-weight: 400;
+    border-radius: 18px;
+  }
+`;
+
+const ExplanationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.white};
+  margin-top: 40px;
+
+  > p {
+    font-weight: 400;
+    font-size: 22px;
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
+  }
+
+  > input {
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    padding: 15px;
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+    border-radius: 18px;
+    outline: none;
+    color: ${({ theme }) => theme.colors.TextColor};
+    font-size: 18px;
+
+    :focus {
+      background-color: ${({ theme }) => theme.colors.white};
+    }
+  }
+`;
+
+const OXExplanationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.white};
+  margin-top: 70px;
+
+  > p {
+    font-weight: 400;
+    font-size: 22px;
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
+  }
+
+  > input {
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    padding: 15px;
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+    border-radius: 18px;
+    outline: none;
+    color: ${({ theme }) => theme.colors.TextColor};
+    font-size: 18px;
+
+    :focus {
+      background-color: ${({ theme }) => theme.colors.white};
+    }
+  }
+`;
+
 const AddBtnWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin-bottom: 40px;
 `;
 
 const AddBtn = styled.div`
@@ -410,6 +562,7 @@ const AddBtn = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+
   width: 60px;
   height: 60px;
   border: 1px solid ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
