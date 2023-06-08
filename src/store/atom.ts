@@ -9,12 +9,17 @@ export const createQuestion = atom({
     path: "",
     problems: [
       {
-        id: "asdf",
+        id: "",
         form: "",
         path: "",
         question: "",
         correct_answer: 0,
-        answers: [],
+        answers: [
+          { answer: "" },
+          { answer: "" },
+          { answer: "" },
+          { answer: "" },
+        ],
         explanation: "",
       },
     ],

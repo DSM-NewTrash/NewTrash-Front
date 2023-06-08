@@ -5,7 +5,6 @@ import { createQuestion } from "../../store/atom";
 import { useRecoilState } from "recoil";
 import React from "react";
 import plus from "../../assets/plus.svg";
-import { useMakeProblem } from "../../utils/api/problem";
 
 const InputObject = [
   {
@@ -31,7 +30,6 @@ const CreateQuestion = () => {
   const [state, setState] = useRecoilState(createQuestion);
   const [btnState, setBtnState] = useState<boolean>(true);
   const [activetab, setActiveTab] = useState<number>(0);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [toggleState, setToggleState] = useState<boolean>();
   const [imageSrc, setImageSrc]: any = useState(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -86,7 +84,6 @@ const CreateQuestion = () => {
         : v;
     });
     setState({ ...state, problems: changedProblem });
-    console.log(state);
   };
 
   const onUpload = (e: any) => {
@@ -129,24 +126,25 @@ const CreateQuestion = () => {
 
   return (
     <Wrapper>
-      <MenuWrapper>
-        {ToggleValue.map((item, idx) => (
-          <ToggleDiv key={idx} onClick={() => onClickTab(idx + 1)}>
-            <ToggleState isState={activetab === idx}>
-              <Check color={activetab === idx} />
-            </ToggleState>
-            <p>{item.name}</p>
-          </ToggleDiv>
-        ))}
-        <NextButton>출제완료</NextButton>
-      </MenuWrapper>
-      {state.problems.map((value, idx) => {
+      {state.problems.map((value) => {
         return (
           <React.Fragment key={value.id}>
+            <MenuWrapper>
+              {ToggleValue.map((item, idx) => (
+                <ToggleDiv key={idx} onClick={() => onClickTab(idx)}>
+                  <ToggleState isState={activetab === idx}>
+                    <Check color={activetab === idx} />
+                  </ToggleState>
+                  <p>{item.name}</p>
+                </ToggleDiv>
+              ))}
+              <NextButton disabled={btnState}>출제완료</NextButton>
+            </MenuWrapper>
+
             <InputBox>
               <ProblemHead>
                 <p>문제</p>
-                <p>{idx + 1} /20</p>
+                <p>1/20</p>
               </ProblemHead>
               {toggleState ? (
                 <>
@@ -182,30 +180,18 @@ const CreateQuestion = () => {
                     <AnswerInputContainer>
                       <p>답 선택</p>
                       <FourAnswerInputContainer>
-                        {InputObject.map((item, answerIdx) => (
-                          <label key={item.name}>
-                            <FourAnswerInput select={selectedIdx === idx}>
-                              <div>{item.name}</div>
-                              <input
-                                type="text"
-                                value={
-                                  state.problems[idx].answers[answerIdx].answer
-                                }
-                                placeholder="답을 입력해주세요"
-                              />
-                            </FourAnswerInput>
-                          </label>
+                        {InputObject.map((item) => (
+                          <FourAnswerInput key={item.name}>
+                            <div>{item.name}</div>
+                            <input placeholder="답을 입력해주세요" />
+                          </FourAnswerInput>
                         ))}
                       </FourAnswerInputContainer>
                     </AnswerInputContainer>
-                    <ExplanationContainer>
+                    <FourAnswerExpContainer>
                       <p>풀이</p>
-                      <input
-                        type="text"
-                        value={state.problems[idx].explanation}
-                        placeholder="풀이를 작성해주세요."
-                      />
-                    </ExplanationContainer>
+                      <input placeholder="풀이를 작성해주세요." />
+                    </FourAnswerExpContainer>
                   </InputContainer>
                 </>
               ) : (
@@ -286,7 +272,6 @@ const ToggleDiv = styled.div`
   display: flex;
   align-items: center;
   margin-right: 34px;
-
   > p {
     font-weight: 400;
     font-size: 20px;
@@ -316,7 +301,6 @@ const NextButton = styled.button`
   font-size: 18px;
   font-weight: 400;
   color: ${({ theme }) => theme.colors.white};
-
   :disabled {
     color: ${({ theme }) => theme.colors.white};
     border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
@@ -328,11 +312,11 @@ const InputBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 1150px;
-  height: 100%;
+  height: 800px;
   margin-top: 20px;
   margin-bottom: 20px;
   gap: 22px;
-  padding: 50px 55px 60px 55px;
+  padding: 20px 55px 40px 55px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 20px;
   box-shadow: 0px 2px 8px rgba(33, 33, 33, 0.25);
@@ -343,7 +327,6 @@ const ProblemHead = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.white};
-
   > p {
     color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
     font-size: 22px;
@@ -374,10 +357,6 @@ const CreateInput = styled.input`
   color: ${({ theme }) => theme.colors.TextColor};
   font-size: 18px;
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
-
-  :focus {
-    background-color: ${({ theme }) => theme.colors.white};
-  }
 `;
 
 const ImgInputWrapper = styled.div`
@@ -398,7 +377,6 @@ const ImgInput = styled.div`
   border-radius: 6px;
   border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
   background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
-
   > p {
     font-weight: 600;
     font-size: 20px;
@@ -411,7 +389,6 @@ const AnswerInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.white};
-
   > p {
     font-weight: 400;
     font-size: 22px;
@@ -428,47 +405,36 @@ const FourAnswerInputContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const FourAnswerInput = styled.div<{ select: boolean }>`
+const FourAnswerInput = styled.div`
   cursor: pointer;
   width: 505px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.white};
-
   > div {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
     height: 50px;
-    border: 1px solid
-      ${({ theme, select }) =>
-        select ? theme.colors.greanScale.main : theme.colors.grayScale.Gray};
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
     border-radius: 100%;
     background-color: ${({ theme }) => theme.colors.white};
-    color: ${({ theme, select }) =>
-      select ? theme.colors.greanScale.main : theme.colors.grayScale.Gray};
+    color: ${({ theme }) => theme.colors.grayScale.Gray};
     font-size: 22px;
     font-weight: 400;
   }
-
   > input {
     width: 420px;
     height: 50px;
     padding: 15px 24px;
     border-radius: 18px;
     outline: none;
-    border: 1px solid
-      ${({ theme, select }) =>
-        select ? theme.colors.greanScale.main : theme.colors.grayScale.Gray};
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
     background-color: ${({ theme }) => theme.colors.grayScale.Light_Gray};
     font-size: 20px;
     font-weight: 400;
-
-    :focus {
-      background-color: ${({ theme }) => theme.colors.white};
-    }
   }
 `;
 
@@ -477,7 +443,6 @@ const OXAnswerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.white};
-
   > button {
     cursor: pointer;
     width: 505px;
@@ -495,14 +460,12 @@ const ExplanationContainer = styled.div`
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.white};
   margin-top: 40px;
-
   > p {
     font-weight: 400;
     font-size: 22px;
     background-color: ${({ theme }) => theme.colors.white};
     color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
   }
-
   > input {
     margin-top: 10px;
     width: 100%;
@@ -513,7 +476,33 @@ const ExplanationContainer = styled.div`
     outline: none;
     color: ${({ theme }) => theme.colors.TextColor};
     font-size: 18px;
+    :focus {
+      background-color: ${({ theme }) => theme.colors.white};
+    }
+  }
+`;
 
+const FourAnswerExpContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.white};
+  margin-top: 20px;
+  > p {
+    font-weight: 400;
+    font-size: 22px;
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
+  }
+  > input {
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    padding: 15px;
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.Gray};
+    border-radius: 18px;
+    outline: none;
+    color: ${({ theme }) => theme.colors.TextColor};
+    font-size: 18px;
     :focus {
       background-color: ${({ theme }) => theme.colors.white};
     }
@@ -525,14 +514,12 @@ const OXExplanationContainer = styled.div`
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.white};
   margin-top: 70px;
-
   > p {
     font-weight: 400;
     font-size: 22px;
     background-color: ${({ theme }) => theme.colors.white};
     color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
   }
-
   > input {
     margin-top: 10px;
     width: 100%;
@@ -543,7 +530,6 @@ const OXExplanationContainer = styled.div`
     outline: none;
     color: ${({ theme }) => theme.colors.TextColor};
     font-size: 18px;
-
     :focus {
       background-color: ${({ theme }) => theme.colors.white};
     }
@@ -553,7 +539,6 @@ const OXExplanationContainer = styled.div`
 const AddBtnWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
 `;
 
 const AddBtn = styled.div`
@@ -562,7 +547,6 @@ const AddBtn = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-
   width: 60px;
   height: 60px;
   border: 1px solid ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
