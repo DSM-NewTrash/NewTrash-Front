@@ -1,55 +1,75 @@
 import styled from "styled-components";
-import CategoryMenu from "./CategoryMenu";
 import { useState, useEffect } from "react";
 import QuizItem from "../common/QuizItem";
-import DropDown from "../common/dropdown/DropDown";
-import { OptionArrType } from "../../interface/common";
-
-const DropDownOption: OptionArrType[] = [
-  { option: "인기순", value: "인기순" },
-  { option: "최신순", value: "최신순" },
-];
+import { useApiError } from "../../hooks/useApiError";
+import { useQuery } from "react-query";
+import { getProblemList } from "../../utils/api/problem";
+import { CategoryConstants } from "../constants";
 
 const List = () => {
-  const [changeTab, setCangeTab] = useState<boolean>(true);
-  const [clickToggle, setClickToggle] = useState<string>("false");
+  const [clickToggle, setClickToggle] = useState<boolean>(false);
   const [activetab, setActiveTab] = useState<number>(0);
-  const [sort, setSort] = useState(DropDownOption[0].value);
+  const [categoryTab, setCategoryTab] = useState<number>(0);
+  const [itemValue, setItemValue] = useState<string>("POLLUTION");
 
   const ToggleValue = [
     {
       name: "전체",
-      value: "false",
+      value: false,
     },
     {
       name: "뱃지유저",
-      value: "true",
+      value: true,
     },
   ];
 
   const onClickTab = (idx: number) => {
     setActiveTab(idx);
+    setClickToggle(ToggleValue[idx].value);
+    console.log(clickToggle);
+  };
+
+  const { handleError } = useApiError();
+
+  const { data: list, refetch } = useQuery(
+    "list",
+    () =>
+      getProblemList({
+        option: "GOOD",
+        category: itemValue,
+        auth: clickToggle,
+      }),
+    {
+      onError: handleError,
+    }
+  );
+
+  const onClickCategory = (idx: number, value: string) => {
+    setCategoryTab(idx);
+    setItemValue(value);
+    console.log(itemValue, "1");
   };
 
   useEffect(() => {
-    if (changeTab === true) {
-      setClickToggle("true");
-    } else {
-      setClickToggle("false");
-    }
-  }, [changeTab]);
-
-  const onChangeSort = (sort: string) => {
-    const sortValue = sort;
-    setSort(sortValue);
-  };
+    refetch(); // itemValue가 변경될 때마다 데이터 다시 가져오기
+  }, [itemValue, clickToggle]);
 
   return (
     <Wrapper>
       <TitleContainer>
         <p>전체 문제집 인기순위</p>
       </TitleContainer>
-      <CategoryMenu />
+      <CategoryWrapper>
+        {CategoryConstants.map((item, idx) => (
+          <CategoryItem
+            onClick={() => onClickCategory(idx, item.value)}
+            isState={categoryTab === idx}
+            key={item.value}
+          >
+            <p>{item.name}</p>
+          </CategoryItem>
+        ))}
+      </CategoryWrapper>
       <ClassificationWrapper>
         <ClassificationToggleContainer>
           {ToggleValue.map((name, idx) => (
@@ -63,14 +83,22 @@ const List = () => {
             </ToggleDiv>
           ))}
         </ClassificationToggleContainer>
-        <DropDown
-          onChangeValue={onChangeSort}
-          value={sort}
-          options={DropDownOption}
-        />
       </ClassificationWrapper>
       <ItemListWrapper>
-        <QuizItem />
+        {list?.data.quizResponses.map((item) => (
+          <QuizItem
+            key={item.id}
+            category={item.category}
+            id={item.id}
+            image={item.image}
+            introduction={item.introduction}
+            isCertificate={item.isCertificate}
+            starRating={item.starRating}
+            title={item.title}
+            totalProblem={item.totalProblem}
+            writer={item.writer}
+          />
+        ))}
       </ItemListWrapper>
     </Wrapper>
   );
@@ -81,7 +109,7 @@ const Wrapper = styled.div`
   margin-top: 65px;
   display: flex;
   flex-direction: column;
-  padding: 0px 203px;
+  padding: 0px 135px;
 `;
 
 const TitleContainer = styled.div`
@@ -133,6 +161,37 @@ const ItemListWrapper = styled.div`
   display: flex;
   gap: 40px;
   flex-wrap: wrap;
+  margin-bottom: 60px;
+`;
+
+const CategoryWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+`;
+
+const CategoryItem = styled.div<{ isState: boolean }>`
+  cursor: pointer;
+  width: 110px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid
+    ${({ theme, isState }) =>
+      isState
+        ? theme.colors.greanScale.Light_Grean
+        : theme.colors.grayScale.Gray};
+  border-radius: 10px;
+
+  > p {
+    font-weight: 400;
+    font-size: 16px;
+    color: ${({ theme, isState }) =>
+      isState ? theme.colors.greanScale.Light_Grean : theme.colors.black};
+  }
 `;
 
 export default List;

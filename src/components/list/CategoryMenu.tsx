@@ -12,7 +12,7 @@ const CategoryMenu = () => {
   };
 
   return (
-    <Wrapper>
+    <CategoryWrapper>
       {CategoryConstants.map((item, idx) => (
         <CategoryItem
           onClick={() => onClickTab(idx, item.value)}
@@ -22,11 +22,11 @@ const CategoryMenu = () => {
           <p>{item.name}</p>
         </CategoryItem>
       ))}
-    </Wrapper>
+    </CategoryWrapper>
   );
 };
 
-const Wrapper = styled.div`
+const CategoryWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;

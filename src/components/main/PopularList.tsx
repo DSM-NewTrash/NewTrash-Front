@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import QuizItem from "../common/QuizItem";
+import { useApiError } from "../../hooks/useApiError";
+import { useQuery } from "react-query";
+import { getProblemList } from "../../utils/api/problem";
 
 const PopularList = () => {
+  const { handleError } = useApiError();
+
+  const { data: list } = useQuery(
+    "list",
+    () => getProblemList({ option: "GOOD", auth: false }),
+    {
+      onError: handleError,
+    }
+  );
+
   return (
     <Wrapper>
       <TitleContainer>
@@ -12,7 +25,20 @@ const PopularList = () => {
         </Link>
       </TitleContainer>
       <ItemListWrapper>
-        <QuizItem />
+        {list?.data.quizResponses.slice(0, 4).map((item) => (
+          <QuizItem
+            key={item.id}
+            category={item.category}
+            id={item.id}
+            image={item.image}
+            introduction={item.introduction}
+            isCertificate={item.isCertificate}
+            starRating={item.starRating}
+            title={item.title}
+            totalProblem={item.totalProblem}
+            writer={item.writer}
+          />
+        ))}
       </ItemListWrapper>
     </Wrapper>
   );
@@ -21,7 +47,7 @@ const PopularList = () => {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1140px;
+  width: 1240px;
   margin-top: 64px;
 `;
 
@@ -49,6 +75,11 @@ const TitleContainer = styled.div`
   }
 `;
 
-const ItemListWrapper = styled.div``;
+const ItemListWrapper = styled.div`
+  width: 1300px;
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+`;
 
 export default PopularList;

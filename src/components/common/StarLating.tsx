@@ -68,14 +68,15 @@ const Stars = styled.div<{ inputSize: boolean }>`
   align-items: center;
   margin-bottom: 5px;
   margin-left: 5px;
+  margin-right: 8px;
 
   .star {
-    margin-right: 5px;
+    margin-right: 3px;
   }
 
   & svg {
-    width: ${({ inputSize }) => (inputSize ? "58px" : "22px")};
-    height: ${({ inputSize }) => (inputSize ? "58px" : "22px")};
+    width: ${({ inputSize }) => (inputSize ? "58px" : "14px")};
+    height: ${({ inputSize }) => (inputSize ? "58px" : "14px")};
     color: gray;
     cursor: pointer;
   }

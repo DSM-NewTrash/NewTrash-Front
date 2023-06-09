@@ -4,48 +4,56 @@ import StarLating from "./StarLating";
 import { book, hash, paper, pen, whitestar } from "../../assets/item/index";
 
 interface Props {
-  quiz_img: string;
-  quiz_title: string;
-  quiz_maker: string;
-  quiz_length: number;
-  description: string;
-  star_lating: number;
-  category: string[];
+  id: number;
+  image: string;
+  title: string;
+  introduction: string;
+  category: string;
+  starRating: number;
+  writer: string;
+  isCertificate: boolean;
+  totalProblem: number;
 }
 
-const HoverCoverContent = () => {
+const HoverCoverContent = ({
+  title,
+  writer,
+  category,
+  starRating,
+  totalProblem,
+  introduction,
+}: Props) => {
   return (
     <HoverCover>
       <CoverContent>
         <CoverItem>
           <img src={book} alt="book" />
-          <p>00문제집, 최희</p>
+          <p>
+            {title}, {writer}
+          </p>
         </CoverItem>
         <CoverItem>
           <img src={hash} alt="book" />
-          <p>00문제집, 최희</p>
+          <p>{category}</p>
         </CoverItem>
         <CoverItem>
           <img src={whitestar} alt="book" />
-          <p>3</p>
+          <p>{starRating}</p>
         </CoverItem>
         <CoverItem>
           <img src={paper} alt="book" />
-          <p>20문제</p>
+          <p>{totalProblem}문제</p>
         </CoverItem>
         <CoverItem>
           <img src={pen} alt="book" />
-          <p>
-            분리수거 심화 문제입니다. 기초를 배우고 오시는걸 추천하는 바입니다
-            분리수거 심화 문제입니다. 기초를 배우고 오시는걸 추천하는
-          </p>
+          <p>{introduction}</p>
         </CoverItem>
       </CoverContent>
     </HoverCover>
   );
 };
 
-const QuizItem = () => {
+const QuizItem = (props: Props) => {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   return (
@@ -53,20 +61,32 @@ const QuizItem = () => {
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      {isHover && <HoverCoverContent />}
-      <ImgWrapper />
+      {isHover && (
+        <HoverCoverContent
+          category={props.category}
+          title={props.title}
+          writer={props.writer}
+          starRating={props.starRating}
+          totalProblem={props.totalProblem}
+          introduction={props.introduction}
+          id={0}
+          image=""
+          isCertificate={false}
+        />
+      )}
+      <img height={200} src={props.image} alt="" />
       <ContentWrapper>
         <QuizInfoWrapper>
-          <p className="title">00문제집</p>
-          <div className="star">
-            <StarLating Input={false} star_lating={5} />
-            <p className="starLating">(3)</p>
-          </div>
+          <p className="title">{props.title}</p>
+          <CategoryItem>
+            <p>{props.category}</p>
+          </CategoryItem>
         </QuizInfoWrapper>
         <CategoryList>
-          <CategoryItem>
-            <p>환경</p>
-          </CategoryItem>
+          <div className="star">
+            <StarLating Input={false} star_lating={props.starRating} />
+            <p className="starLating">({props.starRating})</p>
+          </div>
         </CategoryList>
       </ContentWrapper>
     </Wrapper>
@@ -85,27 +105,16 @@ const Wrapper = styled.div`
   height: 300px;
 `;
 
-const ImgWrapper = styled.div`
-  border-radius: 6px 6px 0px 0px;
-  height: 180px;
-  background-color: black;
-`;
-
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 18px 20px;
+  padding: 12px 12px;
 `;
 
 const QuizInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  .star {
-    display: flex;
-    align-items: center;
-  }
 
   .title {
     font-weight: 400;
@@ -124,7 +133,15 @@ const QuizInfoWrapper = styled.div`
 const CategoryList = styled.div`
   margin-top: 12px;
   display: flex;
-  flex-wrap: wrap;
+
+  .star {
+    display: flex;
+    align-items: center;
+
+    > p {
+      color: ${({ theme }) => theme.colors.grayScale.Very_Dark_Gray};
+    }
+  }
 `;
 
 const CategoryItem = styled.div`
@@ -138,7 +155,7 @@ const CategoryItem = styled.div`
   border-radius: 20px;
 
   > p {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     color: ${({ theme }) => theme.colors.greanScale.main};
   }

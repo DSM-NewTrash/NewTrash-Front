@@ -21,6 +21,23 @@ export interface CreateProblem {
   }[];
 }
 
+export interface ProblemList {
+  totalQuiz: number;
+  quizResponses: [
+    {
+      id: number;
+      image: string;
+      title: string;
+      introduction: string;
+      category: string;
+      starRating: number;
+      writer: string;
+      isCertificate: boolean;
+      totalProblem: number;
+    }
+  ];
+}
+
 export const useMakeProblem = () => {
   const { handleError } = useApiError();
 
@@ -37,4 +54,28 @@ export const useMakeProblem = () => {
       ),
     { onError: handleError }
   );
+};
+
+interface ProblemListRequest {
+  option: string;
+  category?: string;
+  auth: boolean;
+}
+
+export const getProblemList = (request: ProblemListRequest) => {
+  let url = `${BASE_URL}/quizs?option=${request.option}&auth=${request.auth}`;
+
+  if (request.category) {
+    url += `&category=${request.category}`;
+  } else {
+    url += "&category=";
+  }
+
+  const ProblemList = axios.get<ProblemList>(url, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  });
+
+  return ProblemList;
 };
