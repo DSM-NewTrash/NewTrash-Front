@@ -1,20 +1,31 @@
+import { useQuery } from "react-query";
 import styled from "styled-components";
+import { getMyProblem } from "../../utils/api/user";
+import { useApiError } from "../../hooks/useApiError";
 
 const MyCreateList = () => {
+  const { handleError } = useApiError();
+
+  const { data: my } = useQuery("my", () => getMyProblem(), {
+    onError: handleError,
+  });
+
   return (
     <Wrapper>
       <h1>내가 출제한 문제집</h1>
       <CreateProblemList>
-        <CreateProblemContainer>
-          <ImgDiv />
-          <ProblemInfo>
-            <h1>문제집 제목</h1>
-            <CategoryItem>
-              <p>환경</p>
-            </CategoryItem>
-            <p>설명</p>
-          </ProblemInfo>
-        </CreateProblemContainer>
+        {my?.data.quizResponses.map((item) => (
+          <CreateProblemContainer>
+            <img width={150} src={item.image} alt="" />
+            <ProblemInfo>
+              <h1>{item.title}</h1>
+              <CategoryItem>
+                <p>{item.category}</p>
+              </CategoryItem>
+              <p>{item.introduction}</p>
+            </ProblemInfo>
+          </CreateProblemContainer>
+        ))}
       </CreateProblemList>
     </Wrapper>
   );

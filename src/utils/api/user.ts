@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { useApiError } from "../../hooks/useApiError";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const JAVA_BASE_URL = process.env.REACT_APP_JAVA_BASE_URL;
 
 interface ProblemUserCount {
   count: number;
@@ -40,6 +41,32 @@ interface MyPagePatch {
   nickname: string;
   introduce: string;
 }
+
+interface MyCreateProblem {
+  totalQuiz: number;
+  quizResponses: [
+    {
+      id: number;
+      image: string;
+      title: string;
+      introduction: string;
+      category: string;
+    }
+  ];
+}
+
+export const getMyProblem = () => {
+  const MyCreateProblem = axios.get<MyCreateProblem>(
+    `${JAVA_BASE_URL}/quizs/my`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  return MyCreateProblem;
+};
 
 export const getMyExpLevel = () => {
   const MyExpLevel = axios.get<MyExpLevelInfo>(`${BASE_URL}/users/`, {
