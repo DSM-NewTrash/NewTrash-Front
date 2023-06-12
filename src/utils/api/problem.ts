@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import { useApiError } from "../../hooks/useApiError";
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_JAVA_BASE_URL;
+const JAVA_BASE_URL = process.env.REACT_APP_JAVA_BASE_URL;
 
 export interface CreateProblem {
   title: string;
@@ -38,13 +38,27 @@ export interface ProblemList {
   ];
 }
 
+export interface GetProblem {
+  totalProblem: 30;
+  problemResponses: [
+    {
+      id: number;
+      form: string;
+      question: string;
+      correctAnswer: number;
+      image: string;
+      answers: [{ id: number | any; answer: string | any }];
+    }
+  ];
+}
+
 export const useMakeProblem = () => {
   const { handleError } = useApiError();
 
   return useMutation(
     async (Param: CreateProblem) =>
       axios.post(
-        `${BASE_URL}/quizs`,
+        `${JAVA_BASE_URL}/quizs`,
         { ...Param },
         {
           headers: {
@@ -63,7 +77,7 @@ interface ProblemListRequest {
 }
 
 export const getProblemList = (request: ProblemListRequest) => {
-  let url = `${BASE_URL}/quizs?option=${request.option}&auth=${request.auth}`;
+  let url = `${JAVA_BASE_URL}/quizs?option=${request.option}&auth=${request.auth}`;
 
   if (request.category) {
     url += `&category=${request.category}`;
@@ -78,4 +92,17 @@ export const getProblemList = (request: ProblemListRequest) => {
   });
 
   return ProblemList;
+};
+
+export const getProblemSolution = (request: string) => {
+  const getSolutionProblem = axios.get<GetProblem>(
+    `${JAVA_BASE_URL}/quizs/${request}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  return getSolutionProblem;
 };

@@ -9,6 +9,7 @@ import SignUpPage from "./pages/signup/SignPage";
 import LoginPage from "./pages/login/LoginPage";
 import MarketPage from "./pages/market/MarketPage";
 import MyPagePage from "./pages/mypage";
+import ProblemPage from "./pages/problem/ProblemPage";
 
 const Router = () => {
   return (
@@ -26,6 +27,7 @@ const Router = () => {
       <Routes>
         <Route path="/first-create" element={<FirstCreatePage />} />
         <Route path="/question-create" element={<CreatePage />} />
+        <Route path="/quizs/:id" element={<ProblemPage />} />
       </Routes>
       <Routes>
         <Route path="/market" element={<MarketPage />} />
