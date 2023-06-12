@@ -5,6 +5,7 @@ import { useApiError } from "../../hooks/useApiError";
 import { useQuery } from "react-query";
 import { getProblemList } from "../../utils/api/problem";
 import { CategoryConstants } from "../constants";
+import { Link } from "react-router-dom";
 
 const NewList = () => {
   const [clickToggle, setClickToggle] = useState<boolean>(false);
@@ -85,19 +86,24 @@ const NewList = () => {
         </ClassificationToggleContainer>
       </ClassificationWrapper>
       <ItemListWrapper>
-        {list?.data.quizResponses.map((item, idx) => (
-          <QuizItem
-            key={item.id}
-            category={item.category}
-            id={item.id}
-            image={item.image}
-            introduction={item.introduction}
-            isCertificate={item.isCertificate}
-            starRating={item.starRating}
-            title={item.title}
-            totalProblem={item.totalProblem}
-            writer={item.writer}
-          />
+        {list?.data.quizResponses.map((item) => (
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to={`/quizs/${item.id}`}
+          >
+            <QuizItem
+              key={item.id}
+              category={item.category}
+              id={item.id}
+              image={item.image}
+              introduction={item.introduction}
+              isCertificate={item.isCertificate}
+              starRating={item.starRating}
+              title={item.title}
+              totalProblem={item.totalProblem}
+              writer={item.writer}
+            />
+          </Link>
         ))}
       </ItemListWrapper>
     </Wrapper>

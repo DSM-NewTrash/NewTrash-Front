@@ -28,18 +28,23 @@ const NewList = () => {
       </TitleContainer>
       <ItemListWrapper>
         {list?.data.quizResponses.slice(0, 4).map((item) => (
-          <QuizItem
-            key={item.id}
-            category={item.category}
-            id={item.id}
-            image={item.image}
-            introduction={item.introduction}
-            isCertificate={item.isCertificate}
-            starRating={item.starRating}
-            title={item.title}
-            totalProblem={item.totalProblem}
-            writer={item.writer}
-          />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to={`/quizs/${item.id}`}
+          >
+            <QuizItem
+              key={item.id}
+              category={item.category}
+              id={item.id}
+              image={item.image}
+              introduction={item.introduction}
+              isCertificate={item.isCertificate}
+              starRating={item.starRating}
+              title={item.title}
+              totalProblem={item.totalProblem}
+              writer={item.writer}
+            />
+          </Link>
         ))}
       </ItemListWrapper>
     </Wrapper>
@@ -69,7 +74,7 @@ const TitleContainer = styled.div`
   .see {
     cursor: pointer;
     font-weight: 400;
-    font-size: 24px;
+    font-size: 20px;
     color: ${({ theme }) => theme.colors.greanScale.Light_Grean};
 
     :hover {
