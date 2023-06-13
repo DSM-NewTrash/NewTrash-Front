@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useApiError } from "../../hooks/useApiError";
 import { useQuery } from "react-query";
@@ -7,8 +7,17 @@ import { useParams } from "react-router-dom";
 import heart from "../../assets/heart.svg";
 import RemainModal from "./RemainModal";
 
+const OXObject = [
+  { name: "O", value: 1 },
+  { name: "X", value: 0 },
+];
+
 const Problem = () => {
-  const [modalOpen, setModalOpen] = useState<boolean>(true);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    { problemId: number; answerId: number }[]
+  >([]);
+  const [problemCount, setProblemCount] = useState(0);
 
   let { id } = useParams();
   const QUIZ_ID = String(id);
@@ -23,7 +32,48 @@ const Problem = () => {
     }
   );
 
-  console.log(problem?.data);
+  const handleAnswerSelection = (
+    selectedAnswerId: number,
+    problemId: number
+  ) => {
+    const selectedAnswer = {
+      problemId,
+      answerId: selectedAnswerId,
+    };
+
+    setSelectedAnswers((prevSelectedAnswers) => {
+      const existingAnswerIndex = prevSelectedAnswers.findIndex(
+        (answer) => answer.problemId === problemId
+      );
+
+      if (existingAnswerIndex !== -1) {
+        // 이미 해당 문제에 대한 선택한 답이 존재하면 업데이트
+        const updatedAnswers = [...prevSelectedAnswers];
+        updatedAnswers[existingAnswerIndex] = selectedAnswer;
+        return updatedAnswers;
+      } else {
+        // 새로운 선택한 답을 추가
+        return [...prevSelectedAnswers, selectedAnswer];
+      }
+    });
+  };
+  console.log(selectedAnswers);
+
+  useEffect(() => {
+    if (selectedAnswers.length === problem?.data.problemResponses.length) {
+      setProblemCount(0);
+    } else {
+      setProblemCount(
+        problem?.data.problemResponses.length! - selectedAnswers.length
+      );
+    }
+  }, [selectedAnswers, problem?.data.problemResponses.length]);
+
+  console.log(
+    selectedAnswers.length,
+    problem?.data.problemResponses.length,
+    problemCount
+  );
 
   return (
     <Wrapper>
@@ -46,9 +96,25 @@ const Problem = () => {
                   <p>답 선택</p>
                   <FourAnswerInputContainer>
                     {item.answers.map((answerItem, idx) => (
-                      <FourAnswerInput key={answerItem.id}>
+                      <FourAnswerInput
+                        onClick={() =>
+                          handleAnswerSelection(answerItem.id, item.id)
+                        }
+                        key={answerItem.id}
+                        className={
+                          selectedAnswers.some(
+                            (answer) =>
+                              answer.problemId === item.id &&
+                              answer.answerId === answerItem.id
+                          )
+                            ? "selected"
+                            : ""
+                        }
+                      >
                         <div className="circle">{idx + 1}</div>
-                        <FourAnswerBox>{answerItem.answer}</FourAnswerBox>
+                        <FourAnswerBox className="box">
+                          {answerItem.answer}
+                        </FourAnswerBox>
                       </FourAnswerInput>
                     ))}
                   </FourAnswerInputContainer>
@@ -73,12 +139,26 @@ const Problem = () => {
                 <AnswerInputContainer>
                   <p>답 선택</p>
                   <FourAnswerInputContainer>
-                    <OXAnswerContainer>
-                      <button>O</button>
-                    </OXAnswerContainer>
-                    <OXAnswerContainer>
-                      <button>X</button>
-                    </OXAnswerContainer>
+                    {OXObject.map((ox) => (
+                      <OXAnswerContainer key={ox.name}>
+                        <button
+                          className={
+                            selectedAnswers.some(
+                              (answer) =>
+                                answer.problemId === item.id &&
+                                answer.answerId === ox.value
+                            )
+                              ? "selected"
+                              : ""
+                          }
+                          onClick={() =>
+                            handleAnswerSelection(ox.value, item.id)
+                          }
+                        >
+                          {ox.name}
+                        </button>
+                      </OXAnswerContainer>
+                    ))}
                   </FourAnswerInputContainer>
                 </AnswerInputContainer>
               </InputContainer>
@@ -88,10 +168,12 @@ const Problem = () => {
       )}
       <SubmitBox>
         <img src={heart} alt="" />
-        <p>모두 완료 되었습니다! 채점 할 준비 되었나요?</p>
-        <SubmitBtn>제출하기</SubmitBtn>
+        <p>모두 완료 되었습니다! 채점 할 준비가 되었나요?</p>
+        <SubmitBtn onClick={() => setModalOpen(true)}>제출하기</SubmitBtn>
       </SubmitBox>
-      {modalOpen && <RemainModal problem={3} setModalState={setModalOpen} />}
+      {modalOpen && (
+        <RemainModal problem={problemCount} setModalState={setModalOpen} />
+      )}
     </Wrapper>
   );
 };
@@ -210,6 +292,18 @@ const FourAnswerInput = styled.div`
     font-size: 22px;
     font-weight: 400;
   }
+
+  &.selected {
+    .circle {
+      color: ${({ theme }) => theme.colors.greanScale.main};
+      border-color: ${({ theme }) => theme.colors.greanScale.main};
+    }
+
+    .box {
+      border-color: ${({ theme }) => theme.colors.greanScale.main};
+      background-color: #e3f4e1;
+    }
+  }
 `;
 
 const FourAnswerBox = styled.div`
@@ -237,6 +331,11 @@ const OXAnswerContainer = styled.div`
     font-size: 24px;
     font-weight: 400;
     border-radius: 18px;
+
+    &.selected {
+      border-color: ${({ theme }) => theme.colors.greanScale.main};
+      background-color: #e3f4e1;
+    }
   }
 `;
 

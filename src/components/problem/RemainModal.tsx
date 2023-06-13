@@ -17,13 +17,22 @@ const RemainModal = ({ setModalState, problem }: Props) => {
   return (
     <ModalWrapper>
       <Wrapper>
-        <h1>{problem}문제를 건너뛰었습니다.</h1>
-        <p>건너뛴 문제를 검토할까요? 아니면</p>
-        <p className="last">지금 해결한 문제를 제출하시겠습니까?</p>
+        {problem > 0 ? (
+          <>
+            <h1>{problem}문제를 건너뛰었습니다.</h1>
+            <p>건너뛴 문제를 검토할까요? 아니면</p>
+            <p className="last">지금 해결한 문제를 제출하시겠습니까?</p>
+          </>
+        ) : (
+          <>
+            <h1>문제 풀이가 끝났습니다.</h1>
+            <p>문제를 검토할까요? 아니면</p>
+            <p className="last">지금 해결한 문제를 제출하시겠습니까?</p>
+          </>
+        )}
+
         <BtnWrapper>
-          <CancellButton onClick={closeModal}>
-            건너뛴 문제 검토하기
-          </CancellButton>
+          <CancellButton onClick={closeModal}>문제 검토하기</CancellButton>
           <NextButton>해결한 문제 제출하기</NextButton>
         </BtnWrapper>
       </Wrapper>
