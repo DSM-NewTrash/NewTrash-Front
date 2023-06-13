@@ -25,3 +25,10 @@ export const createQuestion = atom({
     ],
   },
 });
+
+export const pointCount = atom({
+  key: "point",
+  default: {
+    coin: 0,
+  },
+});

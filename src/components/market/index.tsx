@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MarketModal from "./MarketModal";
 import { hfive, mfive, mone, mthree, mtwo } from "../../assets/market/index";
+import { useMarketExChange } from "../../utils/api/market";
+import { useApiError } from "../../hooks/useApiError";
+import { useQuery } from "react-query";
+import { getMyExpLevel } from "../../utils/api/user";
 
 const money = [
   {
@@ -33,15 +37,26 @@ const money = [
 
 const Market = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [moneyState, setMoneyState] = useState<number>(20000);
   const [btnState, setBtnState] = useState<boolean>(true);
   const [cur, setCur] = useState<number>(0);
+
+  const { handleError } = useApiError();
+
+  const { data: MyPage, refetch } = useQuery(
+    ["mypage"],
+    () => getMyExpLevel(),
+    {
+      onError: handleError,
+    }
+  );
+
+  const { mutate: market } = useMarketExChange();
 
   const onClick = (num: number) => {
     setCur(num);
     console.log(cur);
 
-    if (moneyState > money[cur].value) {
+    if (MyPage?.data.point! > money[cur].value) {
       setBtnState(false);
     } else {
       setBtnState(true);
@@ -49,8 +64,13 @@ const Market = () => {
   };
 
   const BtnClick = () => {
+    market(money[cur].value);
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    refetch();
+  }, [modalOpen]);
 
   return (
     <Wrapper>
@@ -75,7 +95,7 @@ const Market = () => {
           ))}
         </ChoiceMoneyContainer>
         <ButtonWrapper>
-          <p>현재 내 포인트: {moneyState}P</p>
+          <p>현재 내 포인트: {MyPage?.data.point}P</p>
           <NextButton onClick={BtnClick} disabled={btnState}>
             교환하기
           </NextButton>

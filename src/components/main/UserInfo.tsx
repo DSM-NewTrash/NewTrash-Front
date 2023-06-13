@@ -5,8 +5,11 @@ import { useApiError } from "../../hooks/useApiError";
 import { useQuery } from "react-query";
 import { getMyExpLevel, getMyProblemCount } from "../../utils/api/user";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useRecoilState } from "recoil";
+import { pointCount } from "../../store/atom";
 
 const UserInfo = () => {
+  const [pointState, setPointState] = useRecoilState(pointCount);
   const [tokenState, setTokenState] = useState<boolean>(false);
 
   useEffect(() => {
@@ -28,6 +31,10 @@ const UserInfo = () => {
   });
 
   let expResult = (MyPage?.data.exp! / MyPage?.data.max_exp!) * 100;
+
+  useEffect(() => {
+    setPointState({ coin: MyPage?.data.point! });
+  }, [MyPage?.data.point]);
 
   return (
     <Wrapper>
