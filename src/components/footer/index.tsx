@@ -14,10 +14,20 @@ const Footer = () => {
         </div>
       </InfoContainer>
       <IconContainer>
-        <div>
+        <div
+          onClick={() => {
+            window.open("https://github.com/DSM-NewTrash");
+          }}
+        >
           <img width={55} src={github} alt="" />
         </div>
-        <div>
+        <div
+          onClick={() => {
+            window.open(
+              "https://www.notion.so/NewTrash-865eae5ed0e44163bbdc78a9ca380334?pvs=4"
+            );
+          }}
+        >
           <img width={55} src={notion} alt="" />
         </div>
       </IconContainer>
