@@ -1,17 +1,50 @@
 import styled from "styled-components";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
+import { useMutation } from "react-query";
+import { SubmitSolveProblem } from "../../utils/api/problem";
+import { useApiError } from "../../hooks/useApiError";
+import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { solveResult } from "../../store/atom";
 
 interface Props {
+  problemLength: number;
+  id: string;
+  answer: any[];
   problem: number;
   setModalState: Dispatch<SetStateAction<boolean>>;
 }
 
-const RemainModal = ({ setModalState, problem }: Props) => {
-  const [inputState, setInputState] = useState<string>();
-  const [btnState, setBtnState] = useState<boolean>(true);
+const RemainModal = ({
+  setModalState,
+  problem,
+  answer,
+  id,
+  problemLength,
+}: Props) => {
+  const [resultState, setResultState] = useRecoilState(solveResult);
+  console.log(problemLength);
+  const { handleError } = useApiError();
+
+  const { mutate: submit } = useMutation(() => SubmitSolveProblem(answer, id), {
+    onError: handleError,
+    onSuccess: (res) => {
+      setResultState({
+        ...resultState,
+        correctAnswerCount: res.data.correctAnswerCount,
+        exp: res.data.exp,
+        point: res.data.point,
+      });
+      console.log(res.data.exp);
+    },
+  });
 
   const closeModal = () => {
     setModalState(false);
+  };
+
+  const onClickSubmit = () => {
+    submit();
   };
 
   return (
@@ -33,7 +66,14 @@ const RemainModal = ({ setModalState, problem }: Props) => {
 
         <BtnWrapper>
           <CancellButton onClick={closeModal}>문제 검토하기</CancellButton>
-          <NextButton>해결한 문제 제출하기</NextButton>
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to={`/quizs/result`}
+          >
+            <NextButton onClick={onClickSubmit}>
+              해결한 문제 제출하기
+            </NextButton>
+          </Link>
         </BtnWrapper>
       </Wrapper>
     </ModalWrapper>

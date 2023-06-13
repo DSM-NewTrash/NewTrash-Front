@@ -52,6 +52,21 @@ export interface GetProblem {
   ];
 }
 
+export const SubmitSolveProblem = async (solveQuizs: any[], id: string) => {
+  const problemSolve = await axios.put(
+    `${JAVA_BASE_URL}/quizs/adjustment/${id}`,
+    {
+      solveQuizs,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+  return problemSolve;
+};
+
 export const useMakeProblem = () => {
   const { handleError } = useApiError();
 

@@ -32,3 +32,13 @@ export const pointCount = atom({
     coin: 0,
   },
 });
+
+export const solveResult = atom({
+  key: "result",
+  default: {
+    problemCount: 0,
+    exp: 0,
+    point: 0,
+    correctAnswerCount: 0,
+  },
+});

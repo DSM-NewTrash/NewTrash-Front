@@ -6,6 +6,8 @@ import { getProblemSolution } from "../../utils/api/problem";
 import { useParams } from "react-router-dom";
 import heart from "../../assets/heart.svg";
 import RemainModal from "./RemainModal";
+import { useRecoilState } from "recoil";
+import { solveResult } from "../../store/atom";
 
 const OXObject = [
   { name: "O", value: 1 },
@@ -15,9 +17,10 @@ const OXObject = [
 const Problem = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedAnswers, setSelectedAnswers] = useState<
-    { problemId: number; answerId: number }[]
+    { id: number; correctAnswer: number }[]
   >([]);
   const [problemCount, setProblemCount] = useState(0);
+  const [resultState, setResultState] = useRecoilState(solveResult);
 
   let { id } = useParams();
   const QUIZ_ID = String(id);
@@ -37,27 +40,35 @@ const Problem = () => {
     problemId: number
   ) => {
     const selectedAnswer = {
-      problemId,
-      answerId: selectedAnswerId,
+      id,
+      correctAnswer: selectedAnswerId,
     };
 
     setSelectedAnswers((prevSelectedAnswers) => {
       const existingAnswerIndex = prevSelectedAnswers.findIndex(
-        (answer) => answer.problemId === problemId
+        (answer) => answer.id === problemId
       );
 
       if (existingAnswerIndex !== -1) {
         // 이미 해당 문제에 대한 선택한 답이 존재하면 업데이트
         const updatedAnswers = [...prevSelectedAnswers];
-        updatedAnswers[existingAnswerIndex] = selectedAnswer;
+        updatedAnswers[existingAnswerIndex] = {
+          id: Number(problemId), // problemId를 숫자로 변환
+          correctAnswer: selectedAnswer.correctAnswer,
+        };
         return updatedAnswers;
       } else {
         // 새로운 선택한 답을 추가
-        return [...prevSelectedAnswers, selectedAnswer];
+        return [
+          ...prevSelectedAnswers,
+          {
+            id: Number(problemId), // problemId를 숫자로 변환
+            correctAnswer: selectedAnswer.correctAnswer,
+          },
+        ];
       }
     });
   };
-  console.log(selectedAnswers);
 
   useEffect(() => {
     if (selectedAnswers.length === problem?.data.problemResponses.length) {
@@ -69,11 +80,13 @@ const Problem = () => {
     }
   }, [selectedAnswers, problem?.data.problemResponses.length]);
 
-  console.log(
-    selectedAnswers.length,
-    problem?.data.problemResponses.length,
-    problemCount
-  );
+  const onClickModal = () => {
+    setModalOpen(true);
+    setResultState({
+      ...resultState,
+      problemCount: problem?.data.problemResponses.length!,
+    });
+  };
 
   return (
     <Wrapper>
@@ -104,8 +117,8 @@ const Problem = () => {
                         className={
                           selectedAnswers.some(
                             (answer) =>
-                              answer.problemId === item.id &&
-                              answer.answerId === answerItem.id
+                              answer.id === item.id &&
+                              answer.correctAnswer === answerItem.id
                           )
                             ? "selected"
                             : ""
@@ -145,8 +158,8 @@ const Problem = () => {
                           className={
                             selectedAnswers.some(
                               (answer) =>
-                                answer.problemId === item.id &&
-                                answer.answerId === ox.value
+                                answer.id === item.id &&
+                                answer.correctAnswer === ox.value
                             )
                               ? "selected"
                               : ""
@@ -169,10 +182,16 @@ const Problem = () => {
       <SubmitBox>
         <img src={heart} alt="" />
         <p>모두 완료 되었습니다! 채점 할 준비가 되었나요?</p>
-        <SubmitBtn onClick={() => setModalOpen(true)}>제출하기</SubmitBtn>
+        <SubmitBtn onClick={onClickModal}>제출하기</SubmitBtn>
       </SubmitBox>
       {modalOpen && (
-        <RemainModal problem={problemCount} setModalState={setModalOpen} />
+        <RemainModal
+          problemLength={Number(problem?.data.problemResponses.length)}
+          id={QUIZ_ID}
+          answer={selectedAnswers}
+          problem={problemCount}
+          setModalState={setModalOpen}
+        />
       )}
     </Wrapper>
   );
