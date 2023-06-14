@@ -31,6 +31,7 @@ const RemainModal = ({
     onSuccess: (res) => {
       setResultState({
         ...resultState,
+        problemId: id,
         correctAnswerCount: res.data.correctAnswerCount,
         exp: res.data.exp,
         point: res.data.point,

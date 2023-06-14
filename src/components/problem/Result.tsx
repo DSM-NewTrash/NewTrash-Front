@@ -19,14 +19,16 @@ const ProblemResult = () => {
         <PointText>
           포인트:{resultState.point}P 경험치:{resultState.exp}EXP
         </PointText>
-        <StarLating Input={true} star_lating={3} />
+        <StarLating Input={true} star_lating={5} />
         <EvaluationText>이 문제집을 평가해주세요</EvaluationText>
         <BtnWrapper>
-          <CancellButton>전체 풀이 보기</CancellButton>
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to={`/quizs/result`}
+            to={`/quizs/solve`}
           >
+            <CancellButton>전체 풀이 보기</CancellButton>
+          </Link>
+          <Link style={{ textDecoration: "none", color: "black" }} to={`/`}>
             <NextButton>홈으로 가기</NextButton>
           </Link>
         </BtnWrapper>

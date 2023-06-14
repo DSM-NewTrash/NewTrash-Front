@@ -36,6 +36,7 @@ export const pointCount = atom({
 export const solveResult = atom({
   key: "result",
   default: {
+    problemId: "",
     problemCount: 0,
     exp: 0,
     point: 0,

@@ -52,6 +52,38 @@ export interface GetProblem {
   ];
 }
 
+interface GetSolveProblem {
+  problemResponses: [
+    {
+      id: number;
+      form: string;
+      question: string;
+      correctAnswer: number;
+      image: string;
+      answers: [
+        {
+          id: number;
+          answer: string;
+        }
+      ];
+      explanation: string;
+    }
+  ];
+}
+
+export const SubmitProblemStar = async (id: string, starRating: number) => {
+  const submitStar = await axios.put(
+    `${JAVA_BASE_URL}/quizs/review/${id}`,
+    { starRating },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+  return submitStar;
+};
+
 export const SubmitSolveProblem = async (solveQuizs: any[], id: string) => {
   const problemSolve = await axios.put(
     `${JAVA_BASE_URL}/quizs/adjustment/${id}`,
@@ -83,6 +115,19 @@ export const useMakeProblem = () => {
       ),
     { onError: handleError }
   );
+};
+
+export const getSolveProblem = (id: string) => {
+  const getSolveProblemData = axios.get<GetSolveProblem>(
+    `${JAVA_BASE_URL}/quizs/answers/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  return getSolveProblemData;
 };
 
 interface ProblemListRequest {

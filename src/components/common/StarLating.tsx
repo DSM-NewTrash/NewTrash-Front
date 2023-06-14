@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaStar } from "react-icons/fa";
 import star from "../../assets/star.svg";
+import { useRecoilState } from "recoil";
+import { solveResult } from "../../store/atom";
+import { useMutation } from "react-query";
+import { SubmitProblemStar } from "../../utils/api/problem";
 
 interface Props {
   Input: boolean;
@@ -9,35 +13,36 @@ interface Props {
 }
 
 const StarLating = ({ Input, star_lating }: Props) => {
-  const [starState, setStarState] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [clicked, setClicked] = useState([false, false, false, false, false]);
+  const [resultState, setResultState] = useRecoilState(solveResult);
+
+  const handleStarClick = (index: number) => {
+    let clickStates = [...clicked];
+    for (let i = 0; i < 5; i++) {
+      clickStates[i] = i <= index ? true : false;
+    }
+    setClicked(clickStates);
+  };
+
+  useEffect(() => {
+    sendReview();
+  }, [clicked]); //컨디마 컨디업
+
+  let score = clicked.filter(Boolean).length;
+
+  const { mutate: review } = useMutation(() =>
+    SubmitProblemStar(resultState.problemId, score)
+  );
+
+  const sendReview = () => {
+    review();
+  };
 
   let arr1 = [];
 
   for (let i = 1; i < star_lating + 1; i++) {
     arr1.push(i);
   }
-
-  const handleStarClick = (index: number) => {
-    let clickStates = [...starState];
-    for (let i = 0; i < 5; i++) {
-      clickStates[i] = i <= index ? true : false;
-    }
-    setStarState(clickStates);
-  };
-
-  useEffect(() => {
-    let clickStates = [...starState];
-    for (let i = 0; i < 5; i++) {
-      clickStates[i] = i <= star_lating ? true : false;
-    }
-    setStarState(clickStates);
-  }, [star_lating]);
 
   return (
     <Stars inputSize={Input}>
@@ -47,8 +52,8 @@ const StarLating = ({ Input, star_lating }: Props) => {
             <FaStar
               key={idx}
               size="50"
-              onClick={() => handleStarClick(el)}
-              className={starState[star_lating] ? "yellowStar" : ""}
+              onClick={() => handleStarClick(idx)}
+              className={clicked[idx] ? "yellowStar" : ""}
             />
           );
         })
