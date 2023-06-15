@@ -5,6 +5,7 @@ import { createQuestion } from "../../store/atom";
 import { useRecoilState } from "recoil";
 import React from "react";
 import plus from "../../assets/plus.svg";
+import { Link } from "react-router-dom";
 
 const InputObject = [
   {
@@ -126,21 +127,22 @@ const CreateQuestion = () => {
 
   return (
     <Wrapper>
+      <MenuWrapper>
+        {ToggleValue.map((item, idx) => (
+          <ToggleDiv key={idx} onClick={() => onClickTab(idx)}>
+            <ToggleState isState={activetab === idx}>
+              <Check color={activetab === idx} />
+            </ToggleState>
+            <p>{item.name}</p>
+          </ToggleDiv>
+        ))}
+        <Link style={{ textDecoration: "none", color: "black" }} to={`/`}>
+          <NextButton>출제완료</NextButton>
+        </Link>
+      </MenuWrapper>
       {state.problems.map((value) => {
         return (
           <React.Fragment key={value.id}>
-            <MenuWrapper>
-              {ToggleValue.map((item, idx) => (
-                <ToggleDiv key={idx} onClick={() => onClickTab(idx)}>
-                  <ToggleState isState={activetab === idx}>
-                    <Check color={activetab === idx} />
-                  </ToggleState>
-                  <p>{item.name}</p>
-                </ToggleDiv>
-              ))}
-              <NextButton disabled={btnState}>출제완료</NextButton>
-            </MenuWrapper>
-
             <InputBox>
               <ProblemHead>
                 <p>문제</p>
