@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import heart from "../../assets/heart.svg";
 import RemainModal from "./RemainModal";
 import { useRecoilState } from "recoil";
-import { solveResult } from "../../store/atom";
+import { solveResult, selectedAnswersState } from "../../store/atom";
 
 const OXObject = [
   { name: "O", value: 1 },
@@ -19,6 +19,7 @@ const Problem = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<
     { id: number; correctAnswer: number }[]
   >([]);
+  const [selected, setSelected] = useRecoilState(selectedAnswersState);
   const [problemCount, setProblemCount] = useState(0);
   const [resultState, setResultState] = useRecoilState(solveResult);
 
@@ -40,34 +41,29 @@ const Problem = () => {
     problemId: number
   ) => {
     const selectedAnswer = {
-      id,
+      id: problemId, // 문제의 id를 그대로 대입
       correctAnswer: selectedAnswerId,
     };
 
     setSelectedAnswers((prevSelectedAnswers) => {
       const existingAnswerIndex = prevSelectedAnswers.findIndex(
-        (answer) => answer.id === problemId
+        (answer) => answer.id === selectedAnswer.id
       );
 
       if (existingAnswerIndex !== -1) {
         // 이미 해당 문제에 대한 선택한 답이 존재하면 업데이트
         const updatedAnswers = [...prevSelectedAnswers];
         updatedAnswers[existingAnswerIndex] = {
-          id: Number(problemId), // problemId를 숫자로 변환
-          correctAnswer: selectedAnswer.correctAnswer,
+          ...selectedAnswer, // correctAnswer만 업데이트
         };
         return updatedAnswers;
       } else {
         // 새로운 선택한 답을 추가
-        return [
-          ...prevSelectedAnswers,
-          {
-            id: Number(problemId), // problemId를 숫자로 변환
-            correctAnswer: selectedAnswer.correctAnswer,
-          },
-        ];
+        return [...prevSelectedAnswers, selectedAnswer];
       }
     });
+
+    setSelected(selectedAnswers);
   };
 
   useEffect(() => {

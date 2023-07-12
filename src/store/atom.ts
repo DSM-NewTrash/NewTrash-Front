@@ -1,5 +1,9 @@
 import { atom } from "recoil";
 
+export const selectedAnswersState = atom({
+  key: "selectedAnswers",
+  default: [{ id: 0, correctAnswer: 0 }],
+});
 export const createQuestion = atom({
   key: "create",
   default: {

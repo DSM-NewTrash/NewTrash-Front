@@ -4,6 +4,7 @@ import { solveResult } from "../../store/atom";
 import { useQuery } from "react-query";
 import { getSolveProblem } from "../../utils/api/problem";
 import { useApiError } from "../../hooks/useApiError";
+import { selectedAnswersState } from "../../store/atom";
 
 const OXObject = [
   { name: "O", value: 1 },
@@ -11,13 +12,12 @@ const OXObject = [
 ];
 
 const SolveProblem = () => {
-  const [resultState, setResultState] = useRecoilState(solveResult);
-
+  const [selected, setSelected] = useRecoilState(selectedAnswersState);
   const { handleError } = useApiError();
 
   const { data: solve } = useQuery(
     "solve",
-    () => getSolveProblem(resultState.problemId),
+    () => getSolveProblem({ solveQuizs: selected }),
     {
       onError: handleError,
     }
@@ -45,9 +45,16 @@ const SolveProblem = () => {
                   <FourAnswerInputContainer>
                     {item.answers.map((answerItem, idx) => (
                       <FourAnswerInput
-                        className={
-                          item.correctAnswer === answerItem.id ? "selected" : ""
-                        }
+                        className={`${
+                          item.userAnswer === answerItem.id ? "selected" : ""
+                        } ${
+                          item.correctAnswer === answerItem.id ? "correct" : ""
+                        } ${
+                          item.userAnswer === answerItem.id &&
+                          item.userAnswer !== item.correctAnswer
+                            ? "incorrect"
+                            : ""
+                        }`}
                         key={answerItem.id}
                       >
                         <div className="circle">{idx + 1}</div>
@@ -87,9 +94,16 @@ const SolveProblem = () => {
                       return (
                         <OXAnswerContainer key={ox.name}>
                           <button
-                            className={
-                              item.correctAnswer === ox.value ? "selected" : ""
-                            }
+                            className={`${
+                              item.userAnswer === ox.value ? "selected" : ""
+                            } ${
+                              item.correctAnswer === ox.value ? "correct" : ""
+                            } ${
+                              item.userAnswer === ox.value &&
+                              item.userAnswer !== item.correctAnswer
+                                ? "incorrect"
+                                : ""
+                            }`}
                           >
                             {ox.name}
                           </button>
@@ -247,6 +261,16 @@ const FourAnswerBox = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   font-size: 20px;
   font-weight: 400;
+
+  &.correct {
+    border-color: ${({ theme }) => theme.colors.greanScale.main};
+    background-color: #e3f4e1;
+  }
+
+  &.incorrect {
+    border-color: #ff4343;
+    background-color: #fde8e8;
+  }
 `;
 
 const OXAnswerContainer = styled.div`
@@ -266,6 +290,16 @@ const OXAnswerContainer = styled.div`
     &.selected {
       border-color: ${({ theme }) => theme.colors.greanScale.main};
       background-color: #e3f4e1;
+    }
+
+    &.correct {
+      border-color: ${({ theme }) => theme.colors.greanScale.main};
+      background-color: #e3f4e1;
+    }
+
+    &.incorrect {
+      border-color: #ff4343;
+      background-color: #fde8e8;
     }
   }
 `;

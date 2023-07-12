@@ -58,6 +58,7 @@ interface GetSolveProblem {
       id: number;
       form: string;
       question: string;
+      userAnswer: number;
       correctAnswer: number;
       image: string;
       answers: [
@@ -117,9 +118,10 @@ export const useMakeProblem = () => {
   );
 };
 
-export const getSolveProblem = (id: string) => {
-  const getSolveProblemData = axios.get<GetSolveProblem>(
-    `${JAVA_BASE_URL}/quizs/answers/${id}`,
+export const getSolveProblem = (params: any) => {
+  const getSolveProblemData = axios.post<GetSolveProblem>(
+    `${JAVA_BASE_URL}/quizs/answers`,
+    params,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
